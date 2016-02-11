@@ -28,12 +28,12 @@ void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
 
 void reset_drive_train_callback(const std_msgs::Bool::ConstPtr& msg)
 {
-	bool should_reset = msg->data;
+	drive_train_manager.reset_encoders();	
+	drive_train_manager.reset();
 
-	if (should_reset)
-	{
-		drive_train_manager.reset();
-	}
+	odom_offset_x = drive_train_manager.current_x;
+	odom_offset_y = drive_train_manager.current_y;
+	odom_offset_yaw = drive_train_manager.current_theta;
 }
 
 
@@ -162,7 +162,7 @@ int main(int argc, char *argv[])
 		ROS_INFO("Setup successful");
 		ros::Subscriber twist_subscriber = nh.subscribe("/cmd_vel", 10, twist_callback);
 		ros::Subscriber teleop_subscriber = nh.subscribe("/cmd_vel_mux/input/teleop", 10, twist_callback);
-		ros::Subscriber reset_drive_train_subscriber = nh.subscribe("reset_drive_train", 10, reset_drive_train_callback);
+		ros::Subscriber reset_drive_train_subscriber = nh.subscribe("/reset_drive_train", 10, reset_drive_train_callback);
 		ros::Subscriber initialpose_subscriber = nh.subscribe("initialpose", 10, update_drive_train_position_callback);
 		ros::Subscriber update_drive_train_position_subscriber = nh.subscribe("update_drive_train_position", 10, update_drive_train_position_callback);
 		ros::Publisher odometry_publisher = nh.advertise<nav_msgs::Odometry>("odom", publish_rate);

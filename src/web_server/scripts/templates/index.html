@@ -44,6 +44,33 @@
             <img src="/static/img/eurobot_map.jpg" class="w-100 h-100 p-0">
         </div>
         <div class="col-lg-4 col-md-12">
+            <div class="row my-5">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="robot_x">x (m)</label>
+                        <input type="number" class="form-control" id="robot_x" value="0.0">
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="robot_y">y (m)</label>
+                        <input type="number" class="form-control" id="robot_y" value="0.0">
+                    </div>
+                </div>
+            
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label for="robot_yaw">yaw (degrees)</label>
+                        <input type="number" class="form-control" id="robot_yaw" value="0.0">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5 mb-5">
+                <button id="reset_odometry_btn" class="btn btn-primary w-100">Reset Encoders</button>
+            </div>
+
             <h5 class="mb-5">Control Panel</h5>
 
             <div class="mb-5">

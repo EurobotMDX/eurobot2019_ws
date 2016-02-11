@@ -17,7 +17,7 @@ public:
 
 	virtual bool initialize(const std::string left_device_port_name, const std::string right_device_port_name);
 	virtual bool terminate();
-	virtual bool reset() const;
+	virtual bool reset();
 
 	virtual bool set_rpm(const double left_rpm, const double right_rpm) const;
 

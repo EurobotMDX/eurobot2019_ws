@@ -90,7 +90,7 @@ bool DriveTrainManager::terminate()
 	return status;
 }
 
-bool DriveTrainManager::reset() const
+bool DriveTrainManager::reset()
 {
 	bool status = true;
 
@@ -103,6 +103,14 @@ bool DriveTrainManager::reset() const
 	{
 		status = false;
 	}
+
+	current_x = 0;
+	current_y = 0;
+	current_theta = 0;
+
+	current_vx = 0;
+	current_vy = 0;
+	current_vtheta = 0;
 
 	return status;
 }
@@ -292,11 +300,11 @@ bool DriveTrainManager::update_odometry()
 
 	current_vx = dx / dt;
 	current_vy = dy / dt;
-	current_vtheta = -1.0 * ((theta - current_theta) / dt);
+	current_vtheta = ((theta - current_theta) / dt);
 
 	current_x += dx;
 	current_y += dy;
-	current_theta = -1.0 * theta;
+	current_theta = theta;
 	
 	last_update_time = current_time;
 	last_left_position = current_left_position;

@@ -39,23 +39,23 @@ def publish_point_cloud_messages(data_publishers, measured_distances):
 def main():
     rospy.init_node("range_sensors_ros_handler_node", anonymous=False)
 
-    front_range_publisher = rospy.Publisher("/front_ultrasonic_data", Range, queue_size=10)
-    back_range_publisher  = rospy.Publisher("/back_ultrasonic_data",  Range, queue_size=10)
-    left_range_publisher  = rospy.Publisher("/left_ultrasonic_data",  Range, queue_size=10)
-    right_range_publisher = rospy.Publisher("/right_ultrasonic_data", Range, queue_size=10)
+    front_range_publisher = rospy.Publisher("/front_ultrasonic_data", Range, queue_size=5)
+    back_range_publisher  = rospy.Publisher("/back_ultrasonic_data",  Range, queue_size=5)
+    left_range_publisher  = rospy.Publisher("/left_ultrasonic_data",  Range, queue_size=5)
+    right_range_publisher = rospy.Publisher("/right_ultrasonic_data", Range, queue_size=5)
 
-    front_point_cloud_publisher = rospy.Publisher("/front_point_cloud_data", PointCloud, queue_size=10)
-    back_point_cloud_publisher  = rospy.Publisher("/back_point_cloud_data",  PointCloud, queue_size=10)
-    left_point_cloud_publisher  = rospy.Publisher("/left_point_cloud_data",  PointCloud, queue_size=10)
-    right_point_cloud_publisher = rospy.Publisher("/right_point_cloud_data", PointCloud, queue_size=10)
+    front_point_cloud_publisher = rospy.Publisher("/front_point_cloud_data", PointCloud, queue_size=5)
+    back_point_cloud_publisher  = rospy.Publisher("/back_point_cloud_data",  PointCloud, queue_size=5)
+    left_point_cloud_publisher  = rospy.Publisher("/left_point_cloud_data",  PointCloud, queue_size=5)
+    right_point_cloud_publisher = rospy.Publisher("/right_point_cloud_data", PointCloud, queue_size=5)
 
     front_sensor_msg = PointCloud()
     front_sensor_msg.header.frame_id = "ultrasonic_front_emission_point"
 
     def callback(data):
         measured_distances = json.loads(data.data)
-        publish_ultrasonic_messages([left_range_publisher, right_range_publisher, back_range_publisher, front_range_publisher], measured_distances)
-        publish_point_cloud_messages([left_point_cloud_publisher, right_point_cloud_publisher, back_point_cloud_publisher, front_point_cloud_publisher], measured_distances)
+        publish_ultrasonic_messages([left_range_publisher, back_range_publisher, right_range_publisher, front_range_publisher], measured_distances)
+        publish_point_cloud_messages([left_point_cloud_publisher, back_point_cloud_publisher, right_point_cloud_publisher, front_point_cloud_publisher], measured_distances)
 
     rospy.Subscriber("raw_range_data", String, callback)
     rospy.spin()

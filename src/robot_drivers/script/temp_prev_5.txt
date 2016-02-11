@@ -1,0 +1,209 @@
+rospy.loginfo("pushing right")
+robot.push_right()
+
+robot.move_linear(0.09947)
+robot.move_angular(-1.57)
+
+robot.move_linear(0.01)
+robot.move_angular(-1.57)
+
+robot.move_linear(-1.14336)
+robot.move_angular(-1.57)
+
+robot.move_linear(-1.825118) #-0.025118
+
+rospy.loginfo("pushing left")
+robot.push_left(); rospy.sleep(1)
+
+robot.move_linear(1.851348)
+robot.move_angular(-1.57)
+
+robot.move_linear(-0.63947)
+robot.move_angular(-1.57)
+
+rospy.loginfo("opening gripper")
+robot.open_gripper()
+
+robot.move_linear(0.37305)
+
+rospy.loginfo("closing gripper")
+robot.close_gripper()
+
+robot.move_linear(-0.37305)
+
+rospy.loginfo("open gripper")
+robot.open_gripper()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    rospy.loginfo("pushing right")
+    robot.push_right()
+
+    robot.move_linear(0.09947)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(0.01)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(-1.14336)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(-0.043118) #-0.025118
+
+    rospy.loginfo("pushing left")
+    robot.push_left(); rospy.sleep(1)
+
+    robot.move_linear(0.069348) # 0.051348
+    robot.move_angular(-1.57)
+
+    robot.move_linear(-0.63947)
+    robot.move_angular(-1.57)
+
+    rospy.loginfo("opening gripper")
+    robot.open_gripper()
+
+    robot.move_linear(0.37305)
+
+    rospy.loginfo("closing gripper")
+    robot.close_gripper()
+
+    robot.move_linear(-0.37305)
+
+    rospy.loginfo("open gripper")
+    robot.open_gripper()
+
+
+
+def move_yellow(robot):
+    rospy.loginfo("pushing left")
+    robot.push_left()
+
+    robot.move_linear(0.09947)
+    robot.move_angular(1.57)
+
+    robot.move_linear(0.01)
+    robot.move_angular(1.57)
+
+    robot.move_linear(-1.14336) #-1.14336
+    robot.move_angular(1.57)
+
+    robot.move_linear(-0.043118)
+
+    rospy.loginfo("pushing right")
+    robot.push_right(); rospy.sleep(1)
+
+    robot.move_linear(0.069348)
+    robot.move_angular(1.57)
+
+    robot.move_linear(-0.63947)
+    robot.move_angular(1.57)
+
+    rospy.loginfo("opening gripper")
+    robot.open_gripper()
+
+    robot.move_linear(0.37305)
+
+    rospy.loginfo("closing gripper")
+    robot.close_gripper()
+
+    robot.move_linear(-0.37305)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(0.63947, should_avoid_obstacles=True)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(0.63947, should_avoid_obstacles=True, move_timeout=10)
+
+    rospy.loginfo("open gripper")
+    robot.open_gripper()
+
+
+
+    def move_to(self, x, y, yaw):
+        rospy.sleep(0.5); self.set_motion(0.0, 0.0)
+
+        target_position = {
+            "x" : x,
+            "y" : y,
+            "yaw" : yaw,
+        }
+
+        start_position = copy.deepcopy( self.robot_position )
+
+        dy = target_position["y"] - start_position["y"]
+        dx = target_position["x"] - start_position["x"]
+
+        r = self.get_distance( start_position, target_position )
+
+        angle = math.atan2(dy, dx) - (math.pi / 2.0) #atan(dy / dx) - start_position["yaw"]
+
+        self.move_angular(angle)
+        self.move_linear(r)
+        self.move_angular(target_position["yaw"] - self.robot_position["yaw"])
+
+    
+    def move_waypoints(self, way_points):
+        for way_point in way_points:
+            self.move_to(way_point["x"], way_point["y"], way_point["yaw"])
+
+
+def move_yellow(robot):
+    rospy.loginfo("pushing left")
+    robot.push_left()
+
+    robot.move_linear(0.09947)
+    robot.move_angular(1.57)
+
+    robot.move_linear(0.01)
+    robot.move_angular(1.57)
+
+    robot.move_linear(-1.14336) #-1.14336
+    robot.move_angular(1.57)
+
+    robot.move_linear(-0.043118)
+
+    rospy.loginfo("pushing right")
+    robot.push_right(); rospy.sleep(1)
+
+    robot.move_linear(0.069348)
+    robot.move_angular(1.57)
+
+    robot.move_linear(-0.63947)
+    robot.move_angular(1.57)
+
+    rospy.loginfo("opening gripper")
+    robot.open_gripper()
+
+    robot.move_linear(0.24805)
+
+    rospy.loginfo("closing gripper")
+    robot.close_gripper()
+
+    robot.move_linear(-0.24805)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(0.63947, should_avoid_obstacles=True)
+    robot.move_angular(-1.57)
+
+    robot.move_linear(0.63947, should_avoid_obstacles=True, move_timeout=10)
+
+    rospy.loginfo("open gripper")
+    robot.open_gripper()

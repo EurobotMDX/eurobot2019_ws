@@ -49,25 +49,32 @@ class AdvancedRobotInterface(RobotInterfaceBase):
     
     def get_distance(self, position_1, position_2):
         return math.sqrt(
-            (position_1["x"] - position_2["x"]) ** 2 + (position_1["y"] - position_2["y"]) ** 2
+            (position_2["x"] - position_1["x"]) ** 2 + (position_2["y"] - position_1["y"]) ** 2
         )
     
-    def move_linear(self, displacement, target_speed=0.2, precision=2, should_avoid_obstacles=False, collision_distance=0.55, move_timeout=20, sensor_timeout=1000):
+    def get_heading(self, position_1, position_2):
+        dx = position_2["x"] - position_1["x"]
+        dy = position_2["y"] - position_1["y"]
+
+        return math.atan2(dx, dy)
+    
+    def move_linear(self, displacement, target_speed=0.2, precision=2, should_avoid_obstacles=False, collision_distance=0.55, move_timeout=10, sensor_timeout=1000):
         rospy.sleep(0.5); self.set_motion(0.0, 0.0)
 
         target_speed = abs(target_speed)
+        target_angular_speed = copy.deepcopy(target_speed) / self.base_width
         status = False
 
         start_position = copy.deepcopy(self.robot_position)
         end_position = copy.deepcopy(self.robot_position)
 
-        end_position["x"] += math.sin(end_position["yaw"])  * displacement
-        end_position["y"] += math.cos(end_position["yaw"])  * displacement
+        robot_heading = spf.convert_180_to_360_radians(end_position["yaw"])
+        end_position["x"] += math.sin(robot_heading) * displacement
+        end_position["y"] += math.cos(robot_heading) * displacement
         
         total_distance_to_travel = self.get_distance(start_position, end_position)
         distance_pid_controller = PID(-1.0, 1.0, 10.0, 0, 1.5)
-
-        side_axis_pid_controller = PID(-1.0, 1.0, 10.0, 0, 0)
+        yaw_pid_controller = PID(-1.0, 1.0, 10.0, 0, 0)
 
         def _f(x):
             return  round(x, 3)
@@ -77,13 +84,18 @@ class AdvancedRobotInterface(RobotInterfaceBase):
             
             if move_timeout > 0:
                 if (time.time() - start_time) >= move_timeout:
+                    self.stop_motors()
                     rospy.loginfo("[INFO] move linear timed out")
                     break
-            
+
             current_distance = self.get_distance(self.robot_position, start_position)
+            theta = self.get_heading(self.robot_position, end_position)
+
             scale = distance_pid_controller.calculate(total_distance_to_travel, current_distance)
+            yaw_scale = yaw_pid_controller.calculate(end_position["yaw"], self.robot_position["yaw"])
 
             if (round(abs(distance_pid_controller.pid_impl.pre_error), precision) == 0):
+                self.stop_motors()
                 break
 
             if should_avoid_obstacles:
@@ -100,13 +112,26 @@ class AdvancedRobotInterface(RobotInterfaceBase):
                     rospy.loginfo("Timed out while waiting for obstacle")
                     break
 
-            linear_velocity  = scale * target_speed * self.get_sign(displacement)
-            angular_velocity = 0.0 #((x_scale * target_speed) / self.base_width) * self.get_sign(y_scale)
+            # rospy.loginfo("[INFO] current_distance = {}".format(current_distance))
+            # rospy.loginfo("[INFO] current_distance = {}".format(current_distance))
+            # rospy.loginfo("[INFO] scale = {}\n".format(scale))
+            
+            
 
-            self.set_motion(linear_velocity, -angular_velocity)
+            linear_velocity  = scale * target_speed * self.get_sign(displacement)
+            # angular_velocity = yaw_scale * (linear_velocity / self.base_width)
+            angular_velocity = 0.0 #(x_scale * target_angular_speed) * self.get_sign(y_scale)
+
+            # rospy.loginfo("[INFO] r = {}".format(r))
+            # rospy.loginfo("[INFO] robot_heading = {}".format(math.degrees(robot_heading)))
+            # rospy.loginfo("[INFO] yaw_scale = {}".format(yaw_scale))
+            # rospy.loginfo("[INFO] current heading = {}".format(math.degrees(self.robot_position["yaw"])))
+            # rospy.loginfo("[INFO] angular_velocity = {}\n".format(angular_velocity))
+
+            self.set_motion(linear_velocity, angular_velocity)
             rospy.sleep(0.1)
 
-        self.set_motion(0.0, 0.0); rospy.sleep(0.5)
+        self.stop_motors(); rospy.sleep(0.5)
         return status
     
     def move_angular(self, angle_degrees, target_speed=2.0, precision=1, should_avoid_obstacles=False, collision_distance=0.20, move_timeout=15, sensor_timeout=10):
@@ -141,6 +166,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
             
             if move_timeout > 0:
                 if (time.time() - start_time) >= move_timeout:
+                    self.stop_motors()
                     rospy.loginfo("[INFO] move angular timed out")
                     break
 
@@ -149,6 +175,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
             scale = yaw_pid_controller.calculate(total_angle_to_travel, current_angle_travelled)
 
             if (round(abs(yaw_pid_controller.pid_impl.pre_error), precision) == 0):
+                self.stop_motors()
                 break
 
             linear_velocity  = 0.0
@@ -157,7 +184,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
             self.set_motion(0, angular_velocity)
             rospy.sleep(0.1)
 
-        self.set_motion(0.0, 0.0); rospy.sleep(0.5)
+        self.stop_motors(); rospy.sleep(0.5)
         return status
     
     def get_average_distance(self, access_key="front", howmany_samples=5):
@@ -184,7 +211,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         
         return distance
     
-    def move_to(self, x, y, final_yaw_heading_degrees):
+    def move_to(self, x, y, final_yaw_heading_degrees, target_speed=0.2):
         rospy.sleep(0.5); self.set_motion(0.0, 0.0)
 
         target_position = {
@@ -201,7 +228,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         angle = math.degrees(spf.add_angles_in_180_mode_radians(theta, -self.robot_position["yaw"]))
 
         self.move_angular(angle)
-        self.move_linear( self.get_distance( start_position, target_position ) )
+        self.move_linear( self.get_distance( start_position, target_position ), target_speed=target_speed )
 
         angle = math.degrees( spf.add_angles_in_180_mode_radians(target_position["yaw"], -self.robot_position["yaw"]))
         self.move_angular(angle)
@@ -245,8 +272,10 @@ if __name__ == "__main__":
         rospy.sleep(2)
 
     _f(0, 1.3909, 90.0)
-    _f(-0.63948, 1.3909, 90.0)
+    robot.move_linear(-0.63948)
     _f(0.0, 0.12975, 0.0)
+
+    # robot.move_linear(1.0)
     
     rospy.loginfo("ctrl-c to terminate")
     rospy.spin()

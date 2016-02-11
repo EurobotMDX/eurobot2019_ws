@@ -135,11 +135,14 @@ class RobotInterfaceBase(object):
         except IOError, urllib2.HTTPError:
             pass
     
-    def set_motion(self, linear_velocity, angular_velocity):
+    def set_motion(self, linear_velocity=0, angular_velocity=0):
         msg = Twist()
         msg.linear.x = linear_velocity
         msg.angular.z = angular_velocity
         self.motion_data_publisher.publish(msg)
+    
+    def stop_motors(self):
+        return self.set_motion(0,0)
     
     def publish_string(self, string, publisher):
         msg = String()

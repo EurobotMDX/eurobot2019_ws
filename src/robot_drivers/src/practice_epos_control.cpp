@@ -15,9 +15,7 @@ int main(int argc, char *argv[])
 		status = false;
 		cout << "Initialization failed" << endl;
 	}
-
-	MotionFeedback feedback;
-	double move_distance = 0.5;
+	
 	const double move_speed = 0.4;
 	const double turn_speed = 0.15;
 
@@ -25,58 +23,7 @@ int main(int argc, char *argv[])
 
 	if (status)
 	{
-		// move_distance = 0.5;
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(-move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-
-		// move_distance = 1.0; printf("\n");
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(-move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// move_distance = 1.5; printf("\n");
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(-move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// move_distance = 2.0; printf("\n");
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.translate_by(-move_distance, move_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
-
-		for (int i=0; i<5; i++)
-		{
-			move_distance = 1.5; printf("\n");
-			feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-			my_drive_train.translate_by(move_distance, move_speed, feedback); sleep(2);
-			print_motion_feedback(feedback);
-
-			feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-			my_drive_train.translate_by(-move_distance, move_speed, feedback); sleep(2);
-			print_motion_feedback(feedback);
-		}
-
-		// feedback = {{0,0,0},{0,0,0},(0,0,0),0};
-		// my_drive_train.rotate_by(M_PI_2, turn_speed, feedback); sleep(2);
-		// print_motion_feedback(feedback);
+		// pass
 	}
 
 	if (!my_drive_train.terminate())

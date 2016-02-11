@@ -32,8 +32,8 @@ add_library(${PROJECT_NAME}_LIB
   src/drive_train_manager.cpp
   src/epos_drive_manager.cpp
   src/pid.cpp
-  src/tests/drive_train_manager_test.cpp
-  src/tests/epos_drive_manager_test.cpp
+  # src/tests/drive_train_manager_test.cpp
+  # src/tests/epos_drive_manager_test.cpp
 )
 
 link_directories(
@@ -52,33 +52,33 @@ target_link_libraries(drive_train_ros_handler_node
 )
 add_dependencies(drive_train_ros_handler_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_epos_node src/tests/test_epos.cpp)
-target_link_libraries(test_epos_node
-  ${catkin_LIBRARIES}
-  ${PROJECT_NAME}_LIB
-)
-add_dependencies(test_epos_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_executable(test_epos_node src/tests/test_epos.cpp)
+# target_link_libraries(test_epos_node
+#   ${catkin_LIBRARIES}
+#   ${PROJECT_NAME}_LIB
+# )
+# add_dependencies(test_epos_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_drive_train_node src/tests/test_drive_train.cpp)
-target_link_libraries(test_drive_train_node
-  ${catkin_LIBRARIES}
-  ${PROJECT_NAME}_LIB
-)
-add_dependencies(test_drive_train_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_executable(test_drive_train_node src/tests/test_drive_train.cpp)
+# target_link_libraries(test_drive_train_node
+#   ${catkin_LIBRARIES}
+#   ${PROJECT_NAME}_LIB
+# )
+# add_dependencies(test_drive_train_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_pid_node src/tests/test_pid.cpp)
-target_link_libraries(test_pid_node
-  ${catkin_LIBRARIES}
-  ${PROJECT_NAME}_LIB
-)
-add_dependencies(test_pid_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_executable(test_pid_node src/tests/test_pid.cpp)
+# target_link_libraries(test_pid_node
+#   ${catkin_LIBRARIES}
+#   ${PROJECT_NAME}_LIB
+# )
+# add_dependencies(test_pid_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
-add_executable(test_drive_train_tune_pid_node src/tests/test_drive_train_tune_pid.cpp)
-target_link_libraries(test_drive_train_tune_pid_node
-  ${catkin_LIBRARIES}
-  ${PROJECT_NAME}_LIB
-)
-add_dependencies(test_drive_train_tune_pid_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+# add_executable(test_drive_train_tune_pid_node src/tests/test_drive_train_tune_pid.cpp)
+# target_link_libraries(test_drive_train_tune_pid_node
+#   ${catkin_LIBRARIES}
+#   ${PROJECT_NAME}_LIB
+# )
+# add_dependencies(test_drive_train_tune_pid_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 
 add_executable(practice_epos_control_node src/practice_epos_control.cpp)
 target_link_libraries(practice_epos_control_node

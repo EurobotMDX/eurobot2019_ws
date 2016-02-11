@@ -1,15 +1,13 @@
 #include "drive_train_ros_handler.h"
 
+#include <iostream>
+
 /* define the global const variables to be used by the drive train manager */
-int encoder_counts;
-double gear_ratio;
-double base_width_in_meters;
-double wheel_diameter_in_meters;
 std::string odom_frame_id;
 std::string base_frame_id;
 
 /* Create an instance of the {@DriveTrainManager drive_train_manager} */
-DriveTrainManager drive_train_manager = {base_width_in_meters, wheel_diameter_in_meters, (unsigned int) encoder_counts, gear_ratio};
+DriveTrainManager drive_train_manager;
 
 /**
  *  This funciton recieves twist messages and
@@ -30,50 +28,11 @@ void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
  */
 bool publish_odometry(ros::Publisher &odometry_publisher)
 {
-	static double x = 0;
-	static double y = 0;
-	static double th = 0;
-
-	static double vx  = 0;
-	static double vth = 0;
-
-	ros::Time current_time;
-	static ros::Time last_update_time = ros::Time::now();
-
+	ros::Time current_time = ros::Time::now();
 	tf::TransformBroadcaster odometry_broadcaster;
-
-	current_time = ros::Time::now();
-
-	double right_position_in_meters = 0; double left_position_in_meters = 0;
-	if (!drive_train_manager.get_displacements(left_position_in_meters, right_position_in_meters))
-	{
-		return false;
-	}
-
-	double average_displacement = (right_position_in_meters + left_position_in_meters) / 2.0;
-	th = (right_position_in_meters - left_position_in_meters) / base_width_in_meters;
-
-	// compute the odometry using the velocities of the robot
-	double dt = (current_time - last_update_time).toSec();
-	vx = average_displacement / dt;
-	vth = th / dt;
-
-	if ( average_displacement != 0)
-	{
-		double _x = std::cos(th) * average_displacement;
-		double _y = std::sin(th) * average_displacement;
-
-		x += ( std::cos( th ) * _x - std::sin( th ) * _y );
-		y += ( std::sin( th ) * _x + std::cos( th ) * _y );
-	}
-
-	if (th != 0)
-	{
-		th += th;
-	}
-
+	
 	// since all odometry is 6DOF we'll need a quaternion created from yaw
-	geometry_msgs::Quaternion odom_quaternion = tf::createQuaternionMsgFromYaw(th);
+	geometry_msgs::Quaternion odom_quaternion = tf::createQuaternionMsgFromYaw(drive_train_manager.current_theta);
 
 	// publish the transform over tf
 	geometry_msgs::TransformStamped odom_transform;
@@ -81,8 +40,8 @@ bool publish_odometry(ros::Publisher &odometry_publisher)
 	odom_transform.header.frame_id = odom_frame_id;
 	odom_transform.child_frame_id = base_frame_id;
 
-	odom_transform.transform.translation.x = x;
-	odom_transform.transform.translation.y = y;
+	odom_transform.transform.translation.x = drive_train_manager.current_x;
+	odom_transform.transform.translation.y = drive_train_manager.current_y;
 	odom_transform.transform.translation.z = 0.0;
 	odom_transform.transform.rotation = odom_quaternion;
 
@@ -95,24 +54,44 @@ bool publish_odometry(ros::Publisher &odometry_publisher)
 	odom.header.frame_id = odom_frame_id;
 
 	// set the position
-	odom.pose.pose.position.x = x;
-	odom.pose.pose.position.y = y;
+	odom.pose.pose.position.x = drive_train_manager.current_x;
+	odom.pose.pose.position.y = drive_train_manager.current_y;
 	odom.pose.pose.position.z = 0.0;
 	odom.pose.pose.orientation = odom_quaternion;
 
 	// set the velocity
 	odom.child_frame_id = base_frame_id;
-	odom.twist.twist.linear.x = vx;
-	odom.twist.twist.linear.y = 0;
-	odom.twist.twist.angular.z = vth;
+	odom.twist.twist.linear.x = drive_train_manager.current_vx;
+	odom.twist.twist.linear.y = drive_train_manager.current_vy;
+	odom.twist.twist.angular.z = drive_train_manager.current_vtheta;
 
 	// publish message
 	odometry_publisher.publish(odom);
 
-	// update time
-	last_update_time = current_time;
+	int left_position; int right_position;
+	drive_train_manager.left_wheel.get_position(left_position);
+	drive_train_manager.right_wheel.get_position(right_position);
+
+	// std::cout << "lt counts: " << left_position << std::endl;
+	// std::cout << "rt counts: " << right_position << std::endl;
+	std::cout << "vx: " << drive_train_manager.current_vx << std::endl;
+	std::cout << "vy: " << drive_train_manager.current_vy << std::endl;
+	std::cout << "x: " << drive_train_manager.current_x << std::endl;
+	std::cout << "y: " << drive_train_manager.current_y << std::endl;
+	std::cout << "theta: " << (drive_train_manager.current_theta / M_PI) * 180.0 << std::endl << std::endl;
 
 	return true;
+}
+
+void odometry_loop()
+{
+	ros::Rate loop_rate(15);
+
+	while (drive_train_manager.should_run)
+	{
+		drive_train_manager.update_odometry();
+		loop_rate.sleep();
+	}
 }
 
 int main(int argc, char *argv[])
@@ -125,10 +104,6 @@ int main(int argc, char *argv[])
 
 	int publish_rate;
 	nh.param<int>("publish_rate", publish_rate, 5);
-	nh.param<int>("encoder_counts", encoder_counts, 4096);
-	nh.param<double>("gear_ratio", gear_ratio, 4554.0 / 130.0);
-	nh.param<double>("base_width", base_width_in_meters, 200 / 1000.0);
-	nh.param<double>("wheel_diameter", wheel_diameter_in_meters, 70 / 1000.0);
 	nh.param<std::string>("odom_frame_id", odom_frame_id, "odom");
 	nh.param<std::string>("base_frame_id", base_frame_id, "base_link");
 
@@ -146,7 +121,9 @@ int main(int argc, char *argv[])
 		ros::Subscriber teleop_subscriber = nh.subscribe("/cmd_vel_mux/input/teleop", 10, twist_callback);
 		ros::Publisher odometry_publisher = nh.advertise<nav_msgs::Odometry>(odom_frame_id, publish_rate);
 
-		ros::Rate loop_rate(25);
+		std::thread odometry_update_loop(odometry_loop);
+
+		ros::Rate loop_rate(publish_rate);
 		while (ros::ok)
 		{
 			if ( !publish_odometry(odometry_publisher) )
@@ -157,6 +134,8 @@ int main(int argc, char *argv[])
 			ros::spinOnce();
 			loop_rate.sleep();
 		}
+
+		odometry_update_loop.join();
 	}
 
 	if ( !drive_train_manager.terminate() )
@@ -170,89 +149,3 @@ int main(int argc, char *argv[])
 
 	return 0;
 }
-
-
-// bool publish_odometry(ros::Publisher &odometry_publisher)
-// {
-// 	static double x = 0;
-// 	static double y = 0;
-// 	static double th = 0;
-
-// 	static double vx  = 0;
-// 	static double vy  = 0;
-// 	static double vth = 0;
-
-// 	static ros::Time current_time;
-// 	static ros::Time last_update_time = ros::Time::now();
-
-// 	static tf::TransformBroadcaster odometry_broadcaster;
-
-// 	current_time = ros::Time::now();
-
-// 	double right_position_in_meters = 0; double left_position_in_meters = 0;
-// 	if (!drive_train_manager.get_displacements(left_position_in_meters, right_position_in_meters))
-// 	{
-// 		return false;
-// 	}
-
-// 	double diff_right_left = right_position_in_meters - left_position_in_meters;
-// 	double amplitude = (right_position_in_meters + left_position_in_meters) * 0.5;
-// 	double fraction = diff_right_left / wheel_diameter_in_meters;
-
-// 	// update the robot's velocities
-// 	vx = amplitude * std::cos(th + (fraction / 2.0));
-// 	vy = amplitude * std::sin(th + (fraction / 2.0));
-// 	vth = fraction;
-
-// 	// compute the odometry using the velocities of the robot
-// 	double dt = (current_time - last_update_time).toSec();
-// 	double delta_x = (vx * cos(th) - vy * sin(th)) * dt;
-// 	double delta_y = (vx * sin(th) + vy * cos(th)) * dt;
-// 	double delta_th = vth * dt;
-
-// 	x += delta_x;
-// 	y += delta_y;
-// 	th += delta_th;
-
-// 	// since all odometry is 6DOF we'll need a quaternion created from yaw
-// 	geometry_msgs::Quaternion odom_quaternion = tf::createQuaternionMsgFromYaw(th);
-
-// 	// publish the transform over tf
-// 	geometry_msgs::TransformStamped odom_transform;
-// 	odom_transform.header.stamp = current_time;
-// 	odom_transform.header.frame_id = odom_frame_id;
-// 	odom_transform.child_frame_id = base_frame_id;
-
-// 	odom_transform.transform.translation.x = x;
-// 	odom_transform.transform.translation.y = y;
-// 	odom_transform.transform.translation.z = 0.0;
-// 	odom_transform.transform.rotation = odom_quaternion;
-
-// 	// send the transform
-// 	odometry_broadcaster.sendTransform(odom_transform);
-
-// 	// publish the odom message over ros
-// 	nav_msgs::Odometry odom;
-// 	odom.header.stamp = current_time;
-// 	odom.header.frame_id = odom_frame_id;
-
-// 	// set the position
-// 	odom.pose.pose.position.x = x;
-// 	odom.pose.pose.position.y = y;
-// 	odom.pose.pose.position.z = 0.0;
-// 	odom.pose.pose.orientation = odom_quaternion;
-
-// 	// set the velocity
-// 	odom.child_frame_id = base_frame_id;
-// 	odom.twist.twist.linear.x = vx;
-// 	odom.twist.twist.linear.y = vy;
-// 	odom.twist.twist.angular.z = vth;
-
-// 	// publish message
-// 	odometry_publisher.publish(odom);
-
-// 	// update time
-// 	last_update_time = current_time;
-
-// 	return true;
-// }

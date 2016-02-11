@@ -1,19 +1,70 @@
 {% extends 'includes/default.html' %}
-
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 {% block head %}
-<style>
-    body, html
-    {
-        height: 100%;
-        width: 100%;
-    }
-</style>
+    <style>
+        body, html {
+            height: 100%;
+            width: 100%;
+        }
+    </style>
+    <script type="text/JavaScript" src="{{ url_for('static', filename='js/jsDraw2D.js') }}"></script>
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/index.css') }}">
+
 {% endblock %}
 
 {% block body %}
     <div class="container w-100 h-100 p-5">
-        <h1 class="text-capitalize text-center">Welcome to MDX Brainstorms</h1>
+        <h1 class="text-capitalize text-center">Welcome1 to MDX Brainstorms</h1>
+        <h2 class="text-points text-center">Expected points: X</h2>
+        <div class="container-map w-500 h-400 p-5" id="canvas">
+            <img id="circle" src="
+            {{ url_for('static', filename='images/map_01.png') }}" width="850" height="570">
+            <div class="container-displaynfo" onload="reloadData()">
+                <ul>
+                    <li>Robot 1 Position: (<a id="robot1x"></a>, <a id="robot1y"></a>)</li>
+                    <li>Robot 2 Position: (<a id="robot2x"></a>, <a id="robot2y"></a>)</li>
+                    <li>Experiment: On</li>
+                </ul>
+            </div>
+        </div>
     </div>
+    <script type="text/JavaScript">
+
+        //Create jsGraphics object
+        var gr = new jsGraphics(document.getElementById("canvas"));
+
+        //Create jsColor object
+        var robot1col = new jsColor("red");
+        var robot2col = new jsColor("blue");
+        var robot1x = 200;
+        var robot1y = 300;
+        var robot2x = 350;
+        var robot2y = 100;
+        var display1x = robot1x + 50;
+        var display1y = robot1y + 50;
+        var display2x = robot2x + 50;
+        var display2y = robot2y + 50;
+        //Draw a Line between 2 points
+        var Robot1coords = new jsPoint(robot1x, robot1y);
+        var Robot2coords = new jsPoint(robot2x, robot2y);
+        var Robot1displaycoords = new jsPoint(display1x, display1y);
+        var Robot2displaycoords = new jsPoint(display2x, display2y);
+
+        //Draw filled circle with pt1 as center point and radius 30.
+        gr.fillCircle(robot1col, Robot1displaycoords, 30);
+        gr.fillCircle(robot2col, Robot2displaycoords, 20);
+
+        window.onload = function () {
+            //when the document is finished loading, replace everything
+            //between the <a ...> </a> tags with the value of splitText
+            document.getElementById("robot1x").innerHTML = Robot1coords[Object.keys(Robot1coords)[0]];
+            document.getElementById("robot1y").innerHTML = Robot1coords[Object.keys(Robot1coords)[1]];
+            document.getElementById("robot2x").innerHTML = Robot2coords[Object.keys(Robot2coords)[0]];
+            document.getElementById("robot2y").innerHTML = Robot2coords[Object.keys(Robot2coords)[1]];
+        }
+    </script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/reloader.js') }}"></script>
 {% endblock %}
 
 {% block footer %}

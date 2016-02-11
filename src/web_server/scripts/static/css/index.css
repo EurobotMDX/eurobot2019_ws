@@ -1,0 +1,35 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    color: #222;
+}
+
+body.h1 {
+    font-size: 100px;
+}
+.h2 {
+    font-size: 50px;
+}
+
+
+.container-map{
+    position: absolute;
+    margin-left: auto;
+    margin-left: auto;
+}
+.text-points{
+    padding: 25px;
+}
+
+.container-displaynfo{
+    float:right;
+    position: relative;
+    top:0;
+    right:0;
+    font-size: 40px;
+}
+
+ul {
+    list-style-type: none;
+}

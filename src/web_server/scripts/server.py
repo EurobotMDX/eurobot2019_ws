@@ -16,6 +16,10 @@ def __log(status="INFO", message=""):
 def index():
     return render_template("index.html", logged_in=False)
 
+@app.route("/welcome")
+def header():
+    return render_template("includes/header.html", logged_in=False)
+
 @app.route("/test")
 def test():
     return "Test Successful"

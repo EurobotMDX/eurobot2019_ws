@@ -5,7 +5,7 @@ from std_msgs.msg import String
 
 import serial
 
-DEFAULT_PORT = "/dev/serial/by-path/platform-12120000.usb-usb-0:1:1.0"
+DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.1:1.0"
 DEFAULT_BAUD = 230400
 DEFAULT_LOOP_RATE = 10
 

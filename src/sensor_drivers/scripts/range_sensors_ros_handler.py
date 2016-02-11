@@ -8,7 +8,7 @@ import json
 import math
 from RangeSensor import RangeSensor
 
-range_sensors_frame_ids = ["ultrasonic_front_emission_point", "ultrasonic_back_emission_point", "ultrasonic_left", "ultrasonic_right"]
+range_sensors_frame_ids = ["ultrasonic_front_emission", "ultrasonic_back_emission", "ultrasonic_left", "ultrasonic_right"]
 update_rate = 15
 
 def main():
@@ -37,7 +37,7 @@ def main():
 		# rospy.loginfo("I heard {data}!".format(data=data))
 
 		for index in range(min(len(data), len(range_sensors))):
-			range_sensors[index].update_range(data[index])
+			range_sensors[index].update_range()#data[index]
 			scan_msg = range_sensors[index].get_as_laserscan()
 			range_publisher.publish(scan_msg)
 

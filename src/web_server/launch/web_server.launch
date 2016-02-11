@@ -2,7 +2,7 @@
     <arg name="port" default="8000"/>
 
 	<!-- Launch Web Server -->
-	<node name="web_server_node" pkg="web_server" type="main.py" output="screen">
+	<node name="web_server_node" pkg="web_server" type="ros_main.py" output="screen">
 		<param name="port" type="int" value="$(arg port)"/>
 	</node>
 </launch>

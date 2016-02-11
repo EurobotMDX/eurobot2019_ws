@@ -21,7 +21,7 @@ inflation_radius: 0.05
 
 observation_sources: ultrasonic_front_sensor ultrasonic_back_sensor ultrasonic_left_sensor ultrasonic_right_sensor
 
-ultrasonic_front_sensor: {sensor_frame: ultrasonic_front_emission_point, data_type: LaserScan, topic: scan, marking: true, clearing: true}
-ultrasonic_back_sensor:  {sensor_frame: ultrasonic_back_emission_point , data_type: LaserScan, topic: scan, marking: true, clearing: true}
+ultrasonic_front_sensor: {sensor_frame: ultrasonic_front_emission, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+ultrasonic_back_sensor:  {sensor_frame: ultrasonic_back_emission , data_type: LaserScan, topic: scan, marking: true, clearing: true}
 ultrasonic_left_sensor:  {sensor_frame: ultrasonic_left , data_type: LaserScan, topic: scan, marking: true, clearing: true}
 ultrasonic_right_sensor: {sensor_frame: ultrasonic_right, data_type: LaserScan, topic: scan, marking: true, clearing: true}

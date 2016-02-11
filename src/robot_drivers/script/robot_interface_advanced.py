@@ -58,7 +58,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
 
         return math.atan2(dx, dy)
     
-    def move_linear(self, displacement, target_speed=0.4, precision=3, should_avoid_obstacles=False, obstacle_backup_distance=0.12, clearing_distance=0.32, move_timeout=30, sensor_timeout=1000):
+    def move_linear(self, displacement, target_speed=0.4, precision=3, should_avoid_obstacles=False, obstacle_backup_distance=0.2, clearing_distance=0.32, move_timeout=30, sensor_timeout=1000):
         
         status = False
         self.set_motion(0.0, 0.0)
@@ -77,11 +77,12 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         
         yaw_pid_controller = PID(-1.0, 1.0, 1.2, 0, 0)
         distance_pid_controller = PID(-1.0, 1.0, 4.0, 0, 0.0)
-        collision_avoidance_pid_controller = PID(0.0, 1.0, 10.0, 0, 0.0)
+        
+        rear_collision_avoidance_pid_controller = PID(-1.0, 1.0, 5.0, 0, 0.0)
+        front_collision_avoidance_pid_controller = PID(-1.0, 1.0, 5.0, 0, 0.0)
 
-        access_key = "front"
-        if self.get_sign(displacement) < 0:
-            access_key = "back"
+        linear_velocity = 0
+        angular_velocity = 0
 
         def _f(x):
             return  round(x, 3)
@@ -95,6 +96,10 @@ class AdvancedRobotInterface(RobotInterfaceBase):
 
         start_time = time.time()
         while not rospy.is_shutdown():
+
+            access_key = "front"
+            if self.get_sign(linear_velocity) < 0:
+                access_key = "back"
             
             if (move_timeout > 0) and ((time.time() - start_time) >= move_timeout):
                 self.stop_motors(); rospy.loginfo("[INFO] move linear timed out")
@@ -106,21 +111,57 @@ class AdvancedRobotInterface(RobotInterfaceBase):
             distance_remaining = distance_pid_controller.pid_impl.pre_error * displacement
             distance_to_obstacle = self.proximity_sensors[access_key]
 
-            speed_limiter_scale = collision_avoidance_pid_controller.calculate(min(obstacle_backup_distance, distance_remaining), distance_to_obstacle)
-            rospy.loginfo("[INFO] speed_limiter_scale: {}".format(speed_limiter_scale))
+            front_speed_limiter_scale = front_collision_avoidance_pid_controller.calculate(min(obstacle_backup_distance, abs(distance_remaining)), self.proximity_sensors["front"])
+            front_speed_limiter_scale = -front_speed_limiter_scale
+
+            rear_speed_limiter_scale = rear_collision_avoidance_pid_controller.calculate(min(obstacle_backup_distance, abs(distance_remaining)), self.proximity_sensors["back"])
+            rear_speed_limiter_scale = -rear_speed_limiter_scale
 
             if round(abs(distance_pid_controller.pid_impl.pre_error), precision) == 0:
-                self.stop_motors(); break
-
-            if should_avoid_obstacles:
-                if not self.ensure_clear_path(access_key=access_key, collision_range=min(clearing_distance, abs(distance_remaining)), timeout=sensor_timeout):
-                    status = False
-
-                    rospy.loginfo("Timed out while waiting for obstacle")
-                    break
-
+                self.stop_motors()
+                rospy.loginfo("[INFO] linear motion completed"); break
+            
             linear_velocity  = scale * target_speed * self.get_sign(displacement)
             angular_velocity = yaw_scale * target_angular_speed
+
+            if should_avoid_obstacles:
+                # if not self.ensure_clear_path(access_key=access_key, collision_range=min(clearing_distance, abs(distance_remaining)), timeout=sensor_timeout):
+                #     status = False
+
+                #     rospy.loginfo("Timed out while waiting for obstacle")
+                #     break
+
+                if (self.proximity_sensors["front"] < min(clearing_distance, abs(distance_remaining))) and (self.get_sign(linear_velocity) > 0):
+                    pass
+                else:
+                    front_speed_limiter_scale = 1.0
+                
+                if (self.proximity_sensors["back"] < min(clearing_distance, abs(distance_remaining))) and (self.get_sign(linear_velocity) < 0):
+                    pass
+                else:
+                    rear_speed_limiter_scale = 1.0
+
+                speed_limiter = 1.0
+                if (front_speed_limiter_scale == 1.0) and (rear_speed_limiter_scale == 1.0):
+                    speed_limiter = 1.0
+                elif (front_speed_limiter_scale != 1.0) and (rear_speed_limiter_scale == 1.0):
+                    speed_limiter = front_speed_limiter_scale
+                elif (front_speed_limiter_scale == 1.0) and (rear_speed_limiter_scale != 1.0):
+                    speed_limiter = rear_speed_limiter_scale
+                else:
+                    speed_limiter = 1.0 - (front_speed_limiter_scale - rear_speed_limiter_scale)
+                
+                linear_velocity = speed_limiter * linear_velocity
+                
+
+            # rospy.loginfo("[INFO] mn: {}, cr: {}".format(_f(min(obstacle_backup_distance, abs(distance_remaining))), _f(distance_remaining)))
+            # rospy.loginfo("[INFO] f: {}, b: {}".format(_f(self.proximity_sensors["front"]), _f(self.proximity_sensors["back"])))
+            # rospy.loginfo("[INFO] front_speed_limiter_scale: {}".format(_f(front_speed_limiter_scale)))
+            # rospy.loginfo("[INFO] rear_speed_limiter_scale: {}".format(_f(rear_speed_limiter_scale)))
+            # rospy.loginfo("[INFO] speed_limiter: {}".format(_f(speed_limiter)))
+            # rospy.loginfo("[INFO] linear_vel: {}".format(linear_velocity))
+            # rospy.loginfo("")
+            # rospy.sleep(0.2)
 
             self.set_motion(linear_velocity, angular_velocity)
         
@@ -234,25 +275,27 @@ if __name__ == "__main__":
     robot.initialize()
 
     rospy.loginfo("resetting the robot's odometry")
-    robot.reset_odometry();
+    robot.reset_odometry(); rospy.sleep(1.0)
 
     def _f(x, y, yaw=0):
         rospy.loginfo("[INFO] moving to x:{}, y:{}, yaw:{}".format(x, y, yaw))
         robot.move_to(x, y, yaw)
         rospy.loginfo("done")
         rospy.sleep(2)
-
-    robot.move_linear(1.0, should_avoid_obstacles=True)
-    robot.move_linear(0.2, target_speed=0.15)
     
-    robot.move_angular(90)
-    robot.move_linear(0.2)
+    robot.move_linear(1.0, should_avoid_obstacles=True, move_timeout=15.0, target_speed=0.4)
+    robot.move_linear(-1.0, should_avoid_obstacles=True, move_timeout=15.0, target_speed=0.4)
 
-    robot.move_linear(-0.2)
-    robot.move_angular(-90)
+    # robot.move_linear(0.2, target_speed=0.15)
+    
+    # robot.move_angular(90)
+    # robot.move_linear(0.2)
 
-    robot.move_linear(-0.2, target_speed=0.15)
-    robot.move_linear(-1.0, should_avoid_obstacles=True)
+    # robot.move_linear(-0.2)
+    # robot.move_angular(-90)
+
+    # robot.move_linear(-0.2, target_speed=0.15)
+    # robot.move_linear(-1.0, should_avoid_obstacles=True)
 
     rospy.loginfo("ctrl-c to terminate")
     rospy.spin()

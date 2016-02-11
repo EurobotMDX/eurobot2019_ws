@@ -2,7 +2,8 @@
 sudo apt-get install ros-kinetic-robot-upstart
 
 # install YOUR launch file [within the src folder]
-rosrun robot_upstart install eurobot_bringup/launch/minimal.launch
+#rosrun robot_upstart install eurobot_bringup/launch/minimal.launch
+rosrun robot_upstart install eurobot_bringup/launch/minimal.launch --job eurobot_bringup --user root --rosdistro kinetic --logdir eurobot_bringup/logs
 
 # to complete the installation
 sudo systemctl daemon-reload && sudo systemctl start eurobot

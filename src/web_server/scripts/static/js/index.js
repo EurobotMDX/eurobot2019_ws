@@ -14,6 +14,11 @@ var getJSON = function(url, callback) {
     xhr.send();
 };
 
+var reset_task_btn = document.getElementById("reset_task_btn");
+var eurobot_kill_task_btn = document.getElementById("eurobot_kill_task_btn");
+var start_task_purple_btn = document.getElementById("start_task_purple_btn");
+var start_task_yellow_btn = document.getElementById("start_task_yellow_btn");
+
 var gripper_open_action_btn  = document.getElementById("gripper_open_action_btn");
 var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");
 
@@ -83,5 +88,30 @@ experiment_deactivate_action_btn.onclick = function()
 
 update_info_btn.onclick = function()
 {
-    getJSON(window.location + "/update_info", ()=>{});
+    getJSON(window.location.href + "update_info", ()=>{});
 }
+
+reset_task_btn.onclick = function()
+{
+    console.log("reset task");
+    getJSON(window.location.href + "eurobot_task_reset", ()=>{});
+}
+
+start_task_purple_btn.onclick = function()
+{
+    console.log("task purple");
+    getJSON(window.location.href + "eurobot_start_purple", ()=>{});
+}
+
+start_task_yellow_btn.onclick = function()
+{
+    console.log("task yellow");
+    getJSON(window.location.href + "eurobot_start_yellow", ()=>{});
+}
+
+eurobot_kill_task_btn.onclick = function()
+{
+    console.log("kill task");
+    getJSON(window.location.href + "eurobot_kill_task", ()=>{});
+}
+

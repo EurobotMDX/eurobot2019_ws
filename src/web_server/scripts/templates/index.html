@@ -39,12 +39,12 @@
     </nav>
 
     <div class="row p-2 m-0 pt-5">
-        <div class="col-lg-8 col-md-12">
+        <div class="col-lg-8 col-md-12 mt-5">
             <h5 class="mb-5">Eurobot Map</h5>
             <img src="/static/img/eurobot_map.jpg" class="w-100 h-100 p-0">
         </div>
-        <div class="col-lg-4 col-md-12">
-            <div class="row my-5">
+        <div class="col-lg-4 col-md-12 mt-5">
+            <div class="row mt-5 mb-5">
                 <div class="col-md-4">
                     <div class="form-group">
                         <label for="robot_x">x (m)</label>
@@ -93,7 +93,7 @@
                 </label>
             </div> -->
 
-            <div class="form-group">
+            <div class="form-group mt-5">
                 <label for="gripper_open_action_btn">Gripper Action Button</label>
                 <button id="gripper_open_action_btn" type="button" class="btn btn-primary w-100">Open Gripper</button>
                 <button id="gripper_close_action_btn" type="button" class="btn btn-primary w-100 mt-3">Close Gripper</button>
@@ -110,6 +110,15 @@
                 <label for="experiment_activate_action_btn">Experiment Action Button</label>
                 <button id="experiment_activate_action_btn" type="button" class="btn btn-primary w-100">Activate Experiment</button>
                 <button id="experiment_deactivate_action_btn" type="button" class="btn btn-primary w-100 mt-3">Deactivate Experiment</button>
+            </div>
+
+            <div class="form-group">
+                <label for="reset_task_btn">Eurobot Task Controls</label>
+                <button id="reset_task_btn" type="button" class="btn btn-primary w-100 mt-5">Reset Tasks</button>
+                <button id="start_task_purple_btn" type="button" class="btn btn-primary w-100 mt-3">Start Task Purple</button>
+                <button id="start_task_yellow_btn" type="button" class="btn btn-primary w-100 mt-3">Start Task Yellow</button>
+
+                <button id="eurobot_kill_task_btn" type="button" class="btn btn-primary w-100 mt-5">kill Task</button>
             </div>
             
         </div>

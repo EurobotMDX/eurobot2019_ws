@@ -1,0 +1,9 @@
+<launch>
+	<master auto="start"/>
+	
+	<node pkg="robot_drivers" type="eurobot_task.py" name="eurobot_task" output="screen">
+	</node>
+</launch>
+
+<!-- rosrun robot_upstart install robot_drivers/launch/eurobot_task.launch --job eurobot_task --user root --rosdistro kinetic --logdir robot_drivers/log -->
+<!-- sudo systemctl daemon-reload && sudo systemctl start eurobot_task -->

@@ -114,6 +114,7 @@ class SerialDataHandler(object):
 
 
 def main():
+    rospy.sleep(10)
     my_serial_manager = SerialDataHandler()
     my_serial_manager.initialize()
     

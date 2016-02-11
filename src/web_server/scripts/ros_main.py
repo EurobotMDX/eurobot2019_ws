@@ -53,8 +53,37 @@ def update_robot_position(odometry_msg):
 #["{s,0,0}{s,1,3.14}", "{s,0,1}{s,1,.8}", "{s,0,0}{s,1,3.14}"]
 serial_data_pub = rospy.Publisher('serial_data_handler_msg', String, queue_size=10)
 reset_drive_train_pub = rospy.Publisher('/reset_drive_train', Bool, queue_size=10)
+eurobot_task_cmd_pub = rospy.Publisher('/eurobot_task_cmd', String, queue_size=10)
 
 rospy.Subscriber("odom", Odometry, update_robot_position)
+
+@app.route("/eurobot_task_reset")
+def eurobot_task_reset():
+    msg = String()
+    msg.data = "reset"
+    eurobot_task_cmd_pub.publish(msg)
+    return "Eurobot Task Reset"
+
+@app.route("/eurobot_kill_task")
+def eurobot_kill_task():
+    msg = String()
+    msg.data = "kill_task"
+    eurobot_task_cmd_pub.publish(msg)
+    return "Eurobot Kill Task"
+
+@app.route("/eurobot_start_yellow")
+def eurobot_start_yellow():
+    msg = String()
+    msg.data = "start_yellow"
+    eurobot_task_cmd_pub.publish(msg)
+    return "Eurobot Start Task Yellow"
+
+@app.route("/eurobot_start_purple")
+def eurobot_start_purple():
+    msg = String()
+    msg.data = "start_purple"
+    eurobot_task_cmd_pub.publish(msg)
+    return "Eurobot Start Task Purple"
 
 @app.route("/reset_odometry")
 def reset_odometry():

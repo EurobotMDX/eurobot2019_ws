@@ -148,6 +148,10 @@ def push_right():
     serial_data_pub.publish(msg)
     return "Pushing Right"
 
+@app.after_request
+def allow_cors(response):
+    response.headers['Access-Control-Allow-Origin'] = "*"
+    return response
 
 __log("Starting web server")
 thread.start_new_thread(app.run, (HOST, PORT))

@@ -23,7 +23,7 @@ var start_task_purple_btn = document.getElementById("start_task_purple_btn");
 var start_task_yellow_btn = document.getElementById("start_task_yellow_btn");
 
 var gripper_open_action_btn  = document.getElementById("gripper_open_action_btn");
-var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");
+var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");66
 
 var pusher_left_action_btn  = document.getElementById("pusher_left_action_btn");
 var pusher_right_action_btn = document.getElementById("pusher_right_action_btn");

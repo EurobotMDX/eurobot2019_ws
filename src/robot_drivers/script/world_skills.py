@@ -22,25 +22,35 @@ robot.wait_for_pull_to_start(state=True); rospy.sleep(3.0)
 # Code goes here
 
 # driving
-def drive_square(dist):
-    robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
-    robot.move_angular(90)
-    robot.update_robot_score(50)
-    robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
-    robot.move_angular(90)
-    robot.update_robot_score(50)
-    robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
-    robot.move_angular(90)
-    robot.update_robot_score(50)
-    robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
-    robot.move_angular(90)
-    robot.update_robot_score(50)
+# def drive_square(dist):
+#      robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
+#      robot.move_angular(90)
+#      robot.update_robot_score(50)
+#      robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
+#      robot.move_angular(90)
+#      robot.update_robot_score(50)
+#      robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
+#      robot.move_angular(90)
+#      robot.update_robot_score(50)
+#      robot.move_linear(dist, should_avoid_obstacles=True, obstacle_backup_distance=0.1, clearing_distance=0.12)
+#      robot.move_angular(90)
+#      robot.update_robot_score(50)
 
-robot.deactivate_experiment()
-drive_square(0.5)
+# drive_square(0.5)
 
-def drive_triangle():
-    pass
+def drive_triangle_isosceles(dist):
+  robot.move_angular(30)
+  robot.move_linear(dist , obstacle_backup_distance= 0.1, clearing_distance= 0.1)
+  robot.move_angular(120)
+  robot.move_linear(dist, obstacle_backup_distance=0.1, clearing_distance=0.1)
+  robot.move_angular(120)
+  robot.move_linear(dist, obstacle_backup_distance=0.1, clearing_distance=0.1)
+  robot.move_angular(30)
+
+
+  # robot.deactivate_experiment()
+
+drive_triangle_isosceles(0.25)
 
 rospy.loginfo("ctrl-c to terminate")
 rospy.spin()

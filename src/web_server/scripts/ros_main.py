@@ -58,6 +58,36 @@ eurobot_task_cmd_pub = rospy.Publisher('/eurobot_task_cmd', String, queue_size=1
 
 rospy.Subscriber("odom", Odometry, update_robot_position)
 
+@app.route("/reset_task")
+def reset_task():
+    eurobot_task_cmd_pub.publish(String("reset"))
+    return "Reseting Task"
+
+@app.route("/test_robot")
+def test_robot():
+    try:
+        side = request.args.get("side").decode("utf-8")
+        cmd = "test_{}".format(side)
+        rospy.loginfo("testing with command {}".format(cmd))
+        eurobot_task_cmd_pub.publish(String(cmd))
+    except:
+        pass
+        
+    return "Testing Robot"
+
+@app.route("/start_task")
+def start_task():
+
+    try:
+        side = request.args.get("side").decode("utf-8")
+        cmd = "start_{}".format(side)
+        rospy.loginfo("starting side with command {}".format(cmd))
+        eurobot_task_cmd_pub.publish(String(cmd))
+    except:
+        pass
+    
+    return "Starting Task"
+
 @app.route("/shutdown")
 def shutdown():
     rospy.loginfo("[INFO] Shutting Down")

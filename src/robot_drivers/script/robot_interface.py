@@ -54,6 +54,8 @@ class RobotInterfaceBase(object):
         self.reset_odometry_publisher = rospy.Publisher('/reset_drive_train', Bool, queue_size=10)
         self.robot_score_publisher = rospy.Publisher('/robot_score', Float32, queue_size=10)
 
+        self.robot_score = 0.0
+
     def terminate(self):
         rospy.loginfo("terminating robot_interface")
         self.set_motion(0.0, 0.0)

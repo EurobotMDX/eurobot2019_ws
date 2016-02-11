@@ -63,7 +63,7 @@ def logout():
     session.pop("username", None)
     return redirect(url_for("index"))
 
-@app.route("/shutdown")
+@app.route("/shutdown_server")
 @app.route("/kill_server")
 def shutdown_server():
     __log("Shutting down the server ...")

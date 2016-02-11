@@ -152,6 +152,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
                     speed_limiter = 1.0 - (front_speed_limiter_scale - rear_speed_limiter_scale)
                 
                 linear_velocity = speed_limiter * linear_velocity
+                # linear_velocity = front_speed_limiter_scale * linear_velocity
                 
 
             # rospy.loginfo("[INFO] mn: {}, cr: {}".format(_f(min(obstacle_backup_distance, abs(distance_remaining))), _f(distance_remaining)))
@@ -240,7 +241,7 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         
         return distance
     
-    def move_to(self, x, y, final_yaw_heading_degrees, target_speed=0.4, should_avoid_obstacles=False):
+    def move_to(self, x, y, final_yaw_heading_degrees, target_speed=0.4, should_avoid_obstacles=False, precision=3, should_set_heading=True):
         self.set_motion(0.0, 0.0)
 
         target_position = {
@@ -257,10 +258,11 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         angle = math.degrees(spf.add_angles_in_180_mode_radians(theta, -self.robot_position["yaw"]))
 
         self.move_angular(angle)
-        self.move_linear( self.get_distance( start_position, target_position ), target_speed=target_speed, should_avoid_obstacles=should_avoid_obstacles )
+        self.move_linear( self.get_distance( start_position, target_position ), precision=precision, target_speed=target_speed, should_avoid_obstacles=should_avoid_obstacles )
 
-        angle = math.degrees( spf.add_angles_in_180_mode_radians(target_position["yaw"], -self.robot_position["yaw"]))
-        self.move_angular(angle)
+        if should_set_heading:
+            angle = math.degrees( spf.add_angles_in_180_mode_radians(target_position["yaw"], -self.robot_position["yaw"]))
+            self.move_angular(angle)
 
     def move_waypoints(self, way_points):
         for way_point in way_points:

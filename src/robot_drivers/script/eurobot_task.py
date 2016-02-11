@@ -30,7 +30,7 @@ def do_generic(robot):
     rospy.loginfo("adding score for experiment")
     robot.update_robot_score(40.0)
 
-def table_1_purple(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
+def table_1_purple(robot, speed_level=[0.2, 0.25, 0.38, 0.4]):
     global SHOULD_RUN
 
     rospy.loginfo("starting task purple")
@@ -41,18 +41,18 @@ def table_1_purple(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         robot.stop_motors()
         return
 
-    robot.move_to(0.16943, 0.34233, -1.23446, target_speed=speed_level[2])
-    robot.move_to(0.05432, 1.48142, -90.18769, target_speed=speed_level[-1], should_avoid_obstacles=True)
+    robot.move_to(0.16943, 0.34233, -1.23446, target_speed=speed_level[2], precision=2, should_set_heading=False)
+    robot.move_to(0.05432, 1.48142, -90.18769, target_speed=speed_level[2], should_avoid_obstacles=True)
 
     if not SHOULD_RUN:
         robot.stop_motors()
         return
 
     robot.push_left()
-    d = robot.move_to_surface(target_speed=speed_level[0], access_key="back", move_timeout=8); rospy.sleep(0.5)
+    d = robot.move_to_surface(target_speed=speed_level[0], access_key="back", move_timeout=7); rospy.sleep(0.5)
 
     robot.push_right(); rospy.sleep(0.5)
-    robot.move_linear(d, should_avoid_obstacles=True, move_timeout=8) # add should_avoid_obstacles
+    robot.move_linear(d, target_speed=speed_level[0], should_avoid_obstacles=True, move_timeout=7, precision=2) # add should_avoid_obstacles
 
     rospy.loginfo("adding score for particle accelerator")
     robot.update_robot_score(10.0)
@@ -72,8 +72,8 @@ def table_1_purple(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         return
 
     d = robot.move_to_surface(target_speed=speed_level[0], move_timeout=8) # , move_timeout=8
-    robot.close_gripper(); rospy.sleep(1.0)
-    robot.move_linear(-d, target_speed=speed_level[0], move_timeout=8) # , move_timeout=8
+    robot.close_gripper(); rospy.sleep(0.7)
+    robot.move_linear(-d, target_speed=speed_level[0], move_timeout=8, should_avoid_obstacles=True) # , move_timeout=8
 
     rospy.loginfo("adding score for releasing goldium")
     robot.update_robot_score(20.0)
@@ -83,15 +83,15 @@ def table_1_purple(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         return
 
     robot.move_to(-0.8771, 1.1, -83.07387, target_speed=speed_level[2], should_avoid_obstacles=True)
-    d = robot.move_to_surface(target_speed=speed_level[0])
-    robot.open_gripper(); rospy.sleep(1.0)
+    d = robot.move_to_surface(target_speed=speed_level[0], move_timeout=5)
+    robot.open_gripper(); rospy.sleep(0.7)
 
     rospy.loginfo("adding score for goldium in weighing area")
     robot.update_robot_score(24.0)
 
     rospy.loginfo("done with task purple")
 
-def table_1_yellow(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
+def table_1_yellow(robot, speed_level=[0.2, 0.25, 0.38, 0.4]):
     global SHOULD_RUN
 
     rospy.loginfo("starting task yellow")
@@ -102,19 +102,18 @@ def table_1_yellow(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         robot.stop_motors()
         return
 
-    robot.move_to(-0.18233, 0.30964, -0.33545, target_speed=speed_level[2])
-    robot.move_to(-0.0151, 1.48142, 88.16924, target_speed=speed_level[-1], should_avoid_obstacles=True)
+    robot.move_to(-0.18233, 0.30964, -0.33545, target_speed=speed_level[2], precision=2, should_set_heading=False)
+    robot.move_to(-0.0151, 1.48142, 88.16924, target_speed=speed_level[2], should_avoid_obstacles=True)
 
     if not SHOULD_RUN:
         robot.stop_motors()
         return
 
     robot.push_right()
-    d = robot.move_to_surface(target_speed=speed_level[0], access_key="back", move_timeout=8)
+    d = robot.move_to_surface(target_speed=speed_level[0], access_key="back", move_timeout=7); rospy.sleep(0.5)
 
-    robot.push_left(); rospy.sleep(0.5)
-    robot.move_linear(d)
-    
+    robot.push_left(); rospy.sleep(0.7)
+    robot.move_linear(d, target_speed=speed_level[0], should_avoid_obstacles=True, move_timeout=7, precision=2) # add should_avoid_obstacles
 
     rospy.loginfo("adding score for particle accelerator")
     robot.update_robot_score(10.0)
@@ -134,7 +133,7 @@ def table_1_yellow(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         return
 
     d = robot.move_to_surface(target_speed=speed_level[0], move_timeout=8)
-    robot.close_gripper(); rospy.sleep(0.8)
+    robot.close_gripper(); rospy.sleep(0.7)
     robot.move_linear(-d, target_speed=speed_level[0], should_avoid_obstacles=True, move_timeout=8)
 
     rospy.loginfo("adding score for releasing goldium")
@@ -144,9 +143,9 @@ def table_1_yellow(robot, speed_level=[0.15, 0.25, 0.35, 0.4]):
         robot.stop_motors()
         return
 
-    robot.move_to(0.41827, 1.04506, 77.68496, target_speed=speed_level[2], should_avoid_obstacles=True)
+    robot.move_to(0.41827, 1.04506, 77.68496, target_speed=speed_level[2], should_avoid_obstacles=True, precision=2)
     robot.move_to(0.87744, 1.14051, 77.43708, target_speed=speed_level[2])
-    d = robot.move_to_surface(target_speed=speed_level[0])
+    d = robot.move_to_surface(target_speed=speed_level[0], move_timeout=5)
     robot.open_gripper(); rospy.sleep(1.0)
 
     rospy.loginfo("adding score for goldium in weighing area")
@@ -179,6 +178,9 @@ def eurobot_task_cmd_handler(msg):
 
         rospy.loginfo("initializing robot interface....")
         robot.initialize()
+
+        rospy.loginfo("resetting robot odometry....")
+        robot.reset_odometry()
 
         rospy.loginfo("opening grippers....")
         robot.open_gripper()

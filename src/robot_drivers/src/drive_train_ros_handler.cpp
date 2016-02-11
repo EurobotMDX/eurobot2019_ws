@@ -28,22 +28,25 @@ void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
 
 void reset_drive_train_callback(const std_msgs::Bool::ConstPtr& msg)
 {
-	if ( !drive_train_manager.initialize("USB0", "USB1") )
+	if (!drive_train_manager.terminate())
 	{
+		ROS_INFO("Error terminating the drive train");
 	}
-	else
+
+	if ( !drive_train_manager.initialize("USB0", "USB1") )
 	{
 		ROS_INFO("Error resetting the drive train");
 	}
 	
-	
 	if (drive_train_manager.is_initialized)
 	{
+		ROS_INFO("Resetting the encoders");
 		drive_train_manager.reset_encoders();
 		drive_train_manager.reset_values();
 
 		int left_pos = 0; int right_pos = 0;
 		drive_train_manager.get_position(left_pos, right_pos);
+		ROS_INFO("Done");
 	}
 }
 
@@ -140,7 +143,7 @@ void odometry_loop()
 {
 	ros::Rate loop_rate(15);
 
-	while (drive_train_manager.should_run)
+	while (ros::ok)
 	{
 		drive_train_manager.update_odometry();
 		loop_rate.sleep();

@@ -14,6 +14,9 @@ var getJSON = function(url, callback) {
     xhr.send();
 };
 
+var date_object = new Date();
+
+var shutdown_btn = document.getElementById("shutdown_btn")
 var reset_task_btn = document.getElementById("reset_task_btn");
 var eurobot_kill_task_btn = document.getElementById("eurobot_kill_task_btn");
 var start_task_purple_btn = document.getElementById("start_task_purple_btn");
@@ -41,7 +44,7 @@ experiment_ip_input.value = "192.168.100.102";
 
 function update_robot_position()
 {
-    getJSON(window.location.href + "get_robot_position", (status, xhr)=>{
+    getJSON(window.location.origin + "/get_robot_position", (status, xhr)=>{
         var data = xhr.response;
         robot_x.value   = (data.x).toFixed(5);
         robot_y.value   = (data.y).toFixed(5);
@@ -53,65 +56,86 @@ setInterval(update_robot_position, 1000);
 
 reset_odometry_btn.onclick = function()
 {
-    getJSON(window.location.href + "reset_odometry", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/reset_odometry" + q, ()=>{});
 }
 
 gripper_open_action_btn.onclick = function()
 {
-    getJSON(window.location.href + "open_gripper", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/open_gripper" + q, ()=>{});
 }
 
 gripper_close_action_btn.onclick = function()
 {
-    getJSON(window.location.href + "close_gripper", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/close_gripper" + q, ()=>{});
 }
 
 pusher_left_action_btn.onclick = function()
 {
-    getJSON(window.location.href + "push_left", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/push_left" + q, ()=>{});
 }
 
 pusher_right_action_btn.onclick = function()
 {
-    getJSON(window.location.href + "push_right", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/push_right" + q, ()=>{});
 }
 
 experiment_activate_action_btn.onclick = function()
 {
-    getJSON("http://" + experiment_ip_input.value + "/activate", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON("http://" + experiment_ip_input.value + "/activate" + q, ()=>{});
 }
 
 experiment_deactivate_action_btn.onclick = function()
 {
-    getJSON("http://" + experiment_ip_input.value + "/deactivate", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON("http://" + experiment_ip_input.value + "/deactivate" + q, ()=>{});
 }
 
 update_info_btn.onclick = function()
 {
-    getJSON(window.location.href + "update_info", ()=>{});
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/update_info" + q, ()=>{});
 }
 
 reset_task_btn.onclick = function()
 {
     console.log("reset task");
-    getJSON(window.location.href + "eurobot_task_reset", ()=>{});
+
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/eurobot_task_reset" + q, ()=>{});
 }
 
 start_task_purple_btn.onclick = function()
 {
     console.log("task purple");
-    getJSON(window.location.href + "eurobot_start_purple", ()=>{});
+    getJSON(window.location.origin + "/eurobot_start_purple", ()=>{});
 }
 
 start_task_yellow_btn.onclick = function()
 {
     console.log("task yellow");
-    getJSON(window.location.href + "eurobot_start_yellow", ()=>{});
+
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/eurobot_start_yellow" + q, ()=>{});
 }
 
 eurobot_kill_task_btn.onclick = function()
 {
     console.log("kill task");
-    getJSON(window.location.href + "eurobot_kill_task", ()=>{});
+
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/eurobot_kill_task" + q, ()=>{});
 }
 
+shutdown_btn.onclick = function()
+{
+    console.log("shutdown")
+
+    var q = "?t=" + date_object.getTime();
+    getJSON(window.location.origin + "/shutdown" + q, ()=>{});
+}

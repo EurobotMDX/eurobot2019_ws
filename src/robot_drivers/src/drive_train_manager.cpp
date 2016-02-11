@@ -19,7 +19,14 @@ DriveTrainManager::~DriveTrainManager()
 
 bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0", const std::string right_device_port_name="USB1")
 {
-	// TODO: remove
+	if (is_initialized == true)
+	{
+		if (!terminate())
+		{
+			std::cout << "error terminating the drive train during initialize" << std::endl;
+		}
+	}
+
 	left_wheel  = EposDriveManager();
 	right_wheel = EposDriveManager();
 
@@ -40,6 +47,16 @@ bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0
 		if (r_status) break;
 
 		sleep(1);
+	}
+
+	if (!l_status)
+	{
+		std::cout << "l_status" << (int)l_status << std::endl;
+	}
+
+	if (!r_status)
+	{
+		std::cout << "r_status" << (int)r_status << std::endl;
 	}
 
 	if (!(l_status && r_status))
@@ -65,6 +82,11 @@ bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0
 
 bool DriveTrainManager::terminate()
 {
+	if (is_initialized == false)
+	{
+		return true;
+	}
+
 	bool status = true;
 	is_initialized = false;
 
@@ -84,6 +106,11 @@ bool DriveTrainManager::terminate()
 
 bool DriveTrainManager::reset()
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.reset())
@@ -117,6 +144,11 @@ bool DriveTrainManager::reset_values()
 
 bool DriveTrainManager::set_rpm(const double left_rpm, const double right_rpm) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	// scale the rpm by the gear ratio of the gear train attached to the robot or else you will have to
 	// to send RPMs like 11000... etc. {ask chibuike}
 
@@ -140,6 +172,11 @@ bool DriveTrainManager::set_rpm(const double left_rpm, const double right_rpm) c
 
 bool DriveTrainManager::get_rpm(double &left_rpm, double &right_rpm) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	int current_left_rpm;
@@ -163,6 +200,11 @@ bool DriveTrainManager::get_rpm(double &left_rpm, double &right_rpm) const
 
 bool DriveTrainManager::get_current(short &left_current, short &right_current) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.get_current(left_current))
@@ -180,6 +222,11 @@ bool DriveTrainManager::get_current(short &left_current, short &right_current) c
 
 bool DriveTrainManager::get_position(int &left_position, int &right_position) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.get_position(left_position))
@@ -197,6 +244,11 @@ bool DriveTrainManager::get_position(int &left_position, int &right_position) co
 
 bool DriveTrainManager::set_position(int left_position, int right_position) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.set_position(left_position))
@@ -214,6 +266,11 @@ bool DriveTrainManager::set_position(int left_position, int right_position) cons
 
 bool DriveTrainManager::increment_position(int delta_left_position, int delta_right_position) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.increment_position(delta_left_position))
@@ -231,12 +288,22 @@ bool DriveTrainManager::increment_position(int delta_left_position, int delta_ri
 
 bool DriveTrainManager::set_motion(const double linear_velocity, const double angular_velocity) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	double scalar = angular_velocity * (_RB_BASE_WIDTH / 2.0);
 	return set_velocities(linear_velocity - scalar, linear_velocity + scalar);
 }
 
 bool DriveTrainManager::reset_encoders() const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.reset_encoders())
@@ -254,6 +321,11 @@ bool DriveTrainManager::reset_encoders() const
 
 bool DriveTrainManager::stop() const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	bool status = true;
 
 	if (!left_wheel.stop())
@@ -271,6 +343,11 @@ bool DriveTrainManager::stop() const
 
 bool DriveTrainManager::update_odometry()
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	static auto last_update_time = std::chrono::high_resolution_clock::now();
 
 	int current_left_position;
@@ -313,17 +390,32 @@ bool DriveTrainManager::update_odometry()
 
 bool DriveTrainManager::set_velocity(const double vel) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	double rpm = robot_params::convert_velocity_to_rpm(vel);
 	return set_rpm(rpm, rpm);
 }
 
 bool DriveTrainManager::set_velocities(const double left_vel, const double right_vel) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	set_rpm(robot_params::convert_velocity_to_rpm(left_vel), robot_params::convert_velocity_to_rpm(right_vel));
 }
 
 bool DriveTrainManager::get_velocities(double &left_vel, double &right_vel) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+
 	double left_rpm, right_rpm;
 	if ( get_rpm(left_rpm, right_rpm) )
 	{
@@ -338,6 +430,11 @@ bool DriveTrainManager::get_velocities(double &left_vel, double &right_vel) cons
 
 bool DriveTrainManager::get_displacements(double &left_disp, double &right_disp) const
 {
+	if ( !is_initialized )
+	{
+		return false;
+	}
+	
 	int left_position, right_position;
 	if ( get_position(left_position, right_position) )
 	{

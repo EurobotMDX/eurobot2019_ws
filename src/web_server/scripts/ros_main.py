@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import os
 import rospy
 from std_msgs.msg import String, Bool, Float32
 from sensor_msgs.msg import Range
@@ -56,6 +57,15 @@ reset_drive_train_pub = rospy.Publisher('/reset_drive_train', Bool, queue_size=1
 eurobot_task_cmd_pub = rospy.Publisher('/eurobot_task_cmd', String, queue_size=10)
 
 rospy.Subscriber("odom", Odometry, update_robot_position)
+
+@app.route("/shutdown")
+def shutdown():
+    rospy.loginfo("[INFO] Shutting Down")
+
+    os.system("sh /home/odroid/scripts/shutdown_script.sh &")
+    os.system("disown")
+    rospy.loginfo("[INFO] shutting down now....")
+    return "Shutting Down"
 
 @app.route("/eurobot_task_reset")
 def eurobot_task_reset():

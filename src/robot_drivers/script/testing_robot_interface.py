@@ -50,7 +50,19 @@ class AdvancedRobotInterface(RobotInterfaceBase):
         return math.sqrt(
             (position_1["x"] - position_2["x"]) ** 2 + (position_1["y"] - position_2["y"]) ** 2
         )
-    
+
+    def move_angle_right(self, displacement, target_speed=0.2, precision=2, should_avoid_obstacles=False, collision_distance=0.55, move_timeout=20, sensor_timeout=100):
+        rospy.sleep(0.5); self.set_motion(0.0, 0.0)
+        rospy.sleep(0.5); self.set_motion(0.3, 0.0)
+        rospy.sleep(0.5); self.set_motion(0.0, 0.0)
+
+
+
+    def move_angle_left(self, displacement, target_speed=0.2, precision=2, should_avoid_obstacles=False, collision_distance=0.55, move_timeout=20, sensor_timeout=100):
+        rospy.sleep(0.5); self.set_motion(0.0, 0.0)
+        rospy.sleep(0.5); self.set_motion(0.0, 0.3)
+        rospy.sleep(0.5); self.set_motion(0.0, 0.0)
+
     def move_linear(self, displacement, target_speed=0.2, precision=2, should_avoid_obstacles=False, collision_distance=0.55, move_timeout=20, sensor_timeout=100):
         rospy.sleep(0.5); self.set_motion(0.0, 0.0)
 

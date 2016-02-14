@@ -22,7 +22,18 @@ class RobotGripper(object):
     
     def open_gripper(self):
         pass
-    
+
+    def close_gripper_left(self):
+        pass
+
+    def open_gripper_left(self):
+        pass
+
+    def close_gripper_right(self):
+        pass
+
+    def open_gripper_right(self):
+        pass
     # def extend_gripper(self):
     #     pass
     #

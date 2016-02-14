@@ -126,19 +126,29 @@ class RobotInterfaceBase(object):
         self.robot_position["y"] = copy.deepcopy(robot_pose.position.y)
 
         # rospy.loginfo(self.robot_position)
-    
-    def open_gripper(self):
-        return self.publish_string("{s,0,0.4}{s,1,1.98}", self.serial_data_publisher)
+
 
     def close_gripper(self):
-        return self.publish_string("{s,0,1.98}{s,1,0.0.4}", self.serial_data_publisher)
+        return self.publish_string("{s,0,0.8}{s,1,1.98}", self.serial_data_publisher)
 
-    def semi_open_gripper(self):
-        return self.publish_string("{s,0,0.6}{s,1,1.6}", self.serial_data_publisher)
 
-    def semi_close_gripper(self):
-        return self.publish_string("{s,0,1.6}{s,1,0.6}", self.serial_data_publisher)
-    
+    def open_gripper(self):
+        return self.publish_string("{s,0,1.98}{s,1,0.8}", self.serial_data_publisher)
+
+    # Grippers for world skills:
+
+    def close_gripper_left(self):
+        return self.publish_string("{s,0,0.33}", self.serial_data_publisher)
+
+    def open_gripper_left(self):
+        return self.publish_string("{s,0,1.98}", self.serial_data_publisher)
+
+    def close_gripper_right(self):
+        return self.publish_string("{s,1,2.25}", self.serial_data_publisher)
+
+    def open_gripper_right(self):
+        return self.publish_string("{s,1,0.0.8}", self.serial_data_publisher)
+
     # def push_left(self):
     #     return self.publish_string("{s,2,0.0}", self.serial_data_publisher)
     #

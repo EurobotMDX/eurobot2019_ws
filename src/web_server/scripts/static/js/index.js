@@ -22,14 +22,28 @@ var eurobot_kill_task_btn = document.getElementById("eurobot_kill_task_btn");
 var start_task_purple_btn = document.getElementById("start_task_purple_btn");
 var start_task_yellow_btn = document.getElementById("start_task_yellow_btn");
 
+// World skill tasks
+var start_task_line_btn = document.getElementById("start_task_line_btn");
+var start_task_obstacle_btn = document.getElementById("start_task_obstacle_btn");
+var start_task_sorting_btn = document.getElementById("start_task_sorting_btn");
+
+// Gripper
 var gripper_open_action_btn  = document.getElementById("gripper_open_action_btn");
-var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");66
+var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");
 
-var pusher_left_action_btn  = document.getElementById("pusher_left_action_btn");
-var pusher_right_action_btn = document.getElementById("pusher_right_action_btn");
+var gripper_open_left_action_btn  = document.getElementById("gripper_open_left_action_btn");
+var gripper_close_left_action_btn = document.getElementById("gripper_close_left_action_btn");
 
-var experiment_activate_action_btn  = document.getElementById("experiment_activate_action_btn");
-var experiment_deactivate_action_btn = document.getElementById("experiment_deactivate_action_btn");
+var gripper_open_right_action_btn  = document.getElementById("gripper_open_right_action_btn");
+var gripper_close_right_action_btn = document.getElementById("gripper_close_right_action_btn");
+
+// end of gripper
+
+// var pusher_left_action_btn  = document.getElementById("pusher_left_action_btn");
+// var pusher_right_action_btn = document.getElementById("pusher_right_action_btn");
+
+// var experiment_activate_action_btn  = document.getElementById("experiment_activate_action_btn");
+// var experiment_deactivate_action_btn = document.getElementById("experiment_deactivate_action_btn");
 
 var update_info_btn = document.getElementById("update_info_btn");
 
@@ -39,8 +53,8 @@ var robot_yaw = document.getElementById("robot_yaw");
 
 var reset_odometry_btn = document.getElementById("reset_odometry_btn");
 
-var experiment_ip_input = document.getElementById("experiment_ip");
-experiment_ip_input.value = "192.168.100.102";
+// var experiment_ip_input = document.getElementById("experiment_ip");
+// experiment_ip_input.value = "192.168.100.102";
 
 function update_robot_position()
 {
@@ -60,6 +74,7 @@ reset_odometry_btn.onclick = function()
     getJSON(window.location.origin + "/reset_odometry" + q, ()=>{});
 }
 
+// grippers
 gripper_open_action_btn.onclick = function()
 {
     var q = "?t=" + date_object.getTime();
@@ -72,29 +87,55 @@ gripper_close_action_btn.onclick = function()
     getJSON(window.location.origin + "/close_gripper" + q, ()=>{});
 }
 
-pusher_left_action_btn.onclick = function()
+gripper_open_left_action_btn.onclick = function()
 {
     var q = "?t=" + date_object.getTime();
-    getJSON(window.location.origin + "/push_left" + q, ()=>{});
+    getJSON(window.location.origin + "/open_gripper_left" + q, ()=>{});
 }
 
-pusher_right_action_btn.onclick = function()
+gripper_close_left_action_btn.onclick = function()
 {
     var q = "?t=" + date_object.getTime();
-    getJSON(window.location.origin + "/push_right" + q, ()=>{});
+    getJSON(window.location.origin + "/close_gripper_right" + q, ()=>{});
 }
 
-experiment_activate_action_btn.onclick = function()
+
+gripper_open_right_action_btn.onclick = function()
 {
     var q = "?t=" + date_object.getTime();
-    getJSON("http://" + experiment_ip_input.value + "/activate" + q, ()=>{});
+    getJSON(window.location.origin + "/open_gripper_right" + q, ()=>{});
 }
 
-experiment_deactivate_action_btn.onclick = function()
+gripper_close_right_action_btn.onclick = function()
 {
     var q = "?t=" + date_object.getTime();
-    getJSON("http://" + experiment_ip_input.value + "/deactivate" + q, ()=>{});
+    getJSON(window.location.origin + "/close_gripper_right" + q, ()=>{});
 }
+
+
+// pusher_left_action_btn.onclick = function()
+// {
+//     var q = "?t=" + date_object.getTime();
+//     getJSON(window.location.origin + "/push_left" + q, ()=>{});
+// }
+//
+// pusher_right_action_btn.onclick = function()
+// {
+//     var q = "?t=" + date_object.getTime();
+//     getJSON(window.location.origin + "/push_right" + q, ()=>{});
+// }
+
+// experiment_activate_action_btn.onclick = function()
+// {
+//     var q = "?t=" + date_object.getTime();
+//     getJSON("http://" + experiment_ip_input.value + "/activate" + q, ()=>{});
+// }
+
+// experiment_deactivate_action_btn.onclick = function()
+// {
+//     var q = "?t=" + date_object.getTime();
+//     getJSON("http://" + experiment_ip_input.value + "/deactivate" + q, ()=>{});
+// }
 
 update_info_btn.onclick = function()
 {

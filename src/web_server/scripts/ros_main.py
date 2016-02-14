@@ -88,6 +88,8 @@ def start_task():
     
     return "Starting Task"
 
+# add reset service button and route
+
 @app.route("/shutdown")
 def shutdown():
     rospy.loginfo("[INFO] Shutting Down")
@@ -153,16 +155,46 @@ def get_pull_to_start():
 @app.route("/open_gripper")
 def open_gripper():
     msg = String()
-    msg.data = "{s,0,0.4}{s,1,1.4}" #"{s,0,0}{s,1,3.14}"
+    msg.data = "{s,0,1.98}{s,1,0.8}"
     serial_data_pub.publish(msg)
     return "Gripper Opened"
 
 @app.route("/close_gripper")
 def close_gripper():
     msg = String()
-    msg.data = "{s,0,0.8}{s,1,1.0}" #"{s,0,1}{s,1,.8}"
+    msg.data = "{s,0,0.8}{s,1,2.25}" #{1.90}
     serial_data_pub.publish(msg)
     return "Gripper Closed"
+
+@app.route("/open_gripper_right")
+def open_gripper_right():
+    msg = String()
+    msg.data = "{s,1,0.0.8}"
+    serial_data_pub.publish(msg)
+    return "Right Gripper Opened"
+
+@app.route("/close_gripper_right")
+def close_gripper_right():
+    msg = String()
+    msg.data = "{s,1,2.25}"
+    serial_data_pub.publish(msg)
+    return "Right Gripper Closed"
+
+@app.route("/open_gripper_left")
+def open_gripper_left_():
+    msg = String()
+    msg.data = "{s,0,1.98}"
+    serial_data_pub.publish(msg)
+    return "Left Gripper Opened"
+
+@app.route("/close_gripper_left")
+def close_gripper_left():
+    msg = String()
+    msg.data = "{s,0,0.33}"
+    serial_data_pub.publish(msg)
+    return "Left Gripper Closed"
+
+
 
 @app.route("/push_left")
 def push_left():

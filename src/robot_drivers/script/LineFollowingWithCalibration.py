@@ -89,7 +89,7 @@ class qtr_8rc:
 
     def print_sensor_values(self, values):
     # This function will output sensor number and it's current recorded sensor value before calibration of the sensors
-        for i in range(0, self.NUM_SENSORS):
+        for i in range(0, 1000):
             print("Sensor:{sensorNo} Reading {valuesf}".format(sensorNo=i, valuesf=values[i]))
 
     def infinitedisplay(self, values):
@@ -181,8 +181,6 @@ class qtr_8rc:
                 val = (self.sensorValues[i] - self.calibratedMin[i]) * 1000 / denominator
             if val < 0:
                  val = 0
-            elif val > 1000:
-                 val = 1000
             self.sensorValues[i] = val
 
             print("Calibrated readings:")
@@ -221,16 +219,62 @@ if __name__ == "__main__":
     # rospy.loginfo("waiting for pull to start")
     # robot.wait_for_pull_to_start(state=True)
 
-    qtr.emitters_on()
-    qtr.read_sensors()
-    qtr.emitters_off()
-    qtr.print_sensor_values(qtr.sensorValues)
-   # qtr.infinitedisplay(qtr.sensorValues)
-    print(" ")
+    for i in range(0, 1000000):
+        qtr.emitters_on()
+        qtr.read_sensors()
+        qtr.emitters_off()
+        print("Here're the current values from the sensor before calibration:")
+      #  print(qtr.print_sensor_values(qtr.sensorValues))
+        print(qtr.infinitedisplay(qtr.sensorValues))
 
+        """
+        except KeyboardInterupt:
+            approve_re_calibration = str(raw_input("Do you want to re-calibrate your Pololu QTR-8 Line Array Sensor before proceeding with the driving? (Y/N): "))
+            if approve_re_calibration == 'Y' or approve_re_calibration == 'y':
+                    approve_re_calibration = True
+            elif approve_re_calibration == 'N' or approve_re_calibration == 'n':
+                    approve_re_calibration = False
+            while approve_re_calibration == True:
+                print("Re-calibrating")
+                qtr.initialise_calibration()
+                qtr.emitters_on()
 
-    rospy.loginfo("ctrl-c to terminate")
-    qtr.emitters_off()
-    rospy.spin()
-    rospy.loginfo("terminating....")
-    robot.terminate()
+                for i in range(0, 250):
+                    qtr.calibrate_sensors()
+                    wp.delayMicroseconds(20)
+                qtr.emitters_off()
+
+                print("Re-calibration successfully completed")
+                print("He're Max values from the sensor:")
+                qtr.print_sensor_values(qtr.calibratedMax)
+                print("Re-calibration successfully completed")
+                 print("He are minimum values from the sensor:")
+                qtr.print_sensor_values(qtr.calibratedMin)
+                approval = str(raw_input("Are you happy with the result of the re-calibration (Y/N)? "))
+
+                if approval == 'Y' or approval == 'y':
+                    print("You can now proceed with the driving")
+                    robot.move_linear(1, should_avoid_obstacles=True, obstacle_backup_distance=0.2, clearing_distance=0.32)
+                elif approval == 'N' or aproval == 'n':
+                    qtr = qtr_8rc()
+                    qtr.emitters_off()
+
+        rospy.loginfo("ctrl-c to terminate")
+        qtr.emitters_off()
+        rospy.spin()
+        rospy.loginfo("terminating....")
+        robot.terminate()
+            """
+
+        """
+                        qtr.emitters_on()
+                        print(qtr.read_line())
+                        qtr.emitters_off()
+    
+                        qtr.emitters_on()
+                        qtr.read_sensors()
+                        qtr.emitters_off()
+                        qtr.print_sensor_values(qtr.sensorValues)
+                       # qtr.infinitedisplay(qtr.sensorValues)
+                        print(" ")
+            """

@@ -1,0 +1,7 @@
+<launch>
+	<master auto="start"/>
+	<arg name="scan_frame_id" value="ultra_scan"/>
+
+	<!-- Launch Lazer Scanner -->
+	<include file="$(find sensor_drivers)/launch/lidar_sim.launch" />
+</launch>

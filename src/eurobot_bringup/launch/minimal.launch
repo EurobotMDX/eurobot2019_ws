@@ -1,0 +1,25 @@
+<launch>
+	<master auto="start"/>
+
+	<arg name="publish_rate"    default="15"/>
+	<arg name="global_frame_id" default="map"/>
+	<arg name="odom_frame_id"   default="odom"/>
+	<arg name="base_frame_id"   default="base_link"/>
+
+	<!-- Set Motor Parameters -->
+	<param name="base_frame_id" type="string" value="$(arg base_frame_id)"/>
+	<param name="odom_frame_id" type="string" value="$(arg odom_frame_id)"/>
+
+	<!-- Load the robot's URDF model into the parameter server -->
+    <param name="robot_description" textfile="$(find robot_description)/model/robot_1.urdf"/>
+
+	<!-- Launch robot differential drivers -->
+	<node pkg="robot_drivers" type="drive_train_ros_handler_node" name="drive_train_controller" output="screen">
+		<rosparam file="$(find robot_description)/config/robot_config.yaml" command="load" />
+		<param name="publish_rate"   type="double" value="$(arg publish_rate)"/>
+		<param name="base_frame_id"  type="string" value="$(arg base_frame_id)"/>
+		<param name="odom_frame_id"  type="string" value="$(arg odom_frame_id)"/>
+	</node>
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+</launch>

@@ -8,7 +8,7 @@ import json
 import math
 from RangeSensor import RangeSensor
 
-range_sensors_frame_ids = ["ultrasonic_front_joint", "ultrasonic_back_joint", "ultrasonic_left_joint", "ultrasonic_right_joint"]
+range_sensors_frame_ids = ["ultrasonic_front_emission_point", "ultrasonic_back_emission_point", "ultrasonic_left", "ultrasonic_right"]
 update_rate = 15
 
 def main():

@@ -5,7 +5,7 @@ import rospy
 from sensor_msgs.msg import LaserScan
 
 class RangeSensor(object):
-	def __init__(self, frame_id="", min_range=0.0, max_range=0.352, min_angle=math.radians(-30.0), max_angle=math.radians(30.0)):
+	def __init__(self, frame_id="", min_range=0.0, max_range=0.352, min_angle=math.radians(-15.0), max_angle=math.radians(15.0)):
 		self.frame_id = frame_id
 
 		self.min_range = min_range
@@ -13,14 +13,14 @@ class RangeSensor(object):
 
 		self.min_angle = min_angle
 		self.max_angle = max_angle
-		self.angle_increment = math.radians(10.0)
+		self.angle_increment = math.radians(5.0)
 
-		self.num_readings = int((max_angle - min_angle) / self.angle_increment)
-		self.laser_frequency = 40.0
+		self.num_readings = int(abs(max_angle - min_angle) / self.angle_increment)
+		self.laser_frequency = 1000.0
 
 		self.ranges = []
 		self.intensities = []
-		self.measured_range = -1
+		self.measured_range = max_range
 
 		# pre-populate the LaserScan message
 		self.scan = LaserScan()
@@ -39,7 +39,7 @@ class RangeSensor(object):
 		self.ranges = []
 		self.intensities = []
 
-		for i in range(self.num_readings + 1):
+		for i in range(self.num_readings):
 			angle = (i * self.angle_increment) + self.min_angle
 			self.ranges.append(angle)
 			self.intensities.append(self.measured_range / math.cos(angle))

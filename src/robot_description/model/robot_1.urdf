@@ -77,7 +77,7 @@
         <child link="ultrasonic_front"/>
         <origin rpy="0 0 0" xyz="0 0.11 -0.011"/>
     </joint>
-
+    
     <link name="ultrasonic_back">
         <visual>
             <geometry>
@@ -129,6 +129,41 @@
         <origin rpy="0 0 -1.57079632679" xyz="0.085 0.086 -0.011"/>
     </joint>
 
+    <link name="ultrasonic_front_emission">
+        <visual>
+            <geometry>
+                <sphere radius="0.005" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0. 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="ultrasonic_front_emission_point" type="fixed">
+        <axis xyz="1 1 1"/>
+        <parent link="base_link"/>
+        <child link="ultrasonic_front_emission"/>
+        <origin rpy="0 0 0" xyz="0 0.125 0.0"/>
+    </joint>
+
+    <link name="ultrasonic_back_emission">
+        <visual>
+            <geometry>
+                <sphere radius="0.005" />
+            </geometry>
+            <material name="blue">
+                <color rgba="0 0. 1 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="ultrasonic_back_emission_point" type="fixed">
+        <axis xyz="1 1 1"/>
+        <parent link="base_link"/>
+        <child link="ultrasonic_back_emission"/>
+        <origin rpy="0 0 3.141592654" xyz="0 -0.125 0.0"/>
+    </joint>
+
+
     <!-- robot head indicator -->
 
     <link name="head_indication">
@@ -150,7 +185,7 @@
 
     <gazebo>
         <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-            <jointName>wheel_left_joint, wheel_right_joint, caster_joint, ultrasonic_front_joint, ultrasonic_back_joint, ultrasonic_left_joint, ultrasonic_right_joint</jointName>
+            <jointName>wheel_left_joint, wheel_right_joint, caster_joint, ultrasonic_front_joint, ultrasonic_back_joint, ultrasonic_left_joint, ultrasonic_right_joint, ultrasonic_front_emission_point, ultrasonic_back_emission_point</jointName>
         </plugin>
     </gazebo>
 </robot>

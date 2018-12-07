@@ -12,6 +12,7 @@
 	
 	<include file="$(find eurobot_bringup)/launch/minimal.launch" />
 	<include file="$(find eurobot_bringup)/launch/sensors.launch" />
+	<include file="$(find eurobot_bringup)/launch/web_server.launch" />
 
 	<!--Run the map server using a static map-->
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>

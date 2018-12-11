@@ -1,5 +1,3 @@
-
-import rospy
 import thread
 import os, sys
 from flask import Flask, render_template, request, session, redirect, escape, render_template_string, Response, send_from_directory, url_for

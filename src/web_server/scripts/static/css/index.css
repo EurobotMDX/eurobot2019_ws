@@ -1,0 +1,11 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    font-family: 'Calibri', sans-serif;
+    color: #222;
+}
+
+
+body.h1 {
+    font-size: 50px;
+}

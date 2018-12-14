@@ -1,3 +1,4 @@
+
 {% extends 'includes/default.html' %}
 
 {% block head %}
@@ -8,6 +9,10 @@
         width: 100%;
     }
 </style>
+
+    <link rel="stylesheet"
+      href="{{url_for('static', filename='css/index.css')}}">
+
 {% endblock %}
 
 {% block body %}

@@ -16,9 +16,6 @@ orb = cv2.ORB_create(nfeatures=1500) #Could be with no args
 keypoints, descriptors = orb.detectAndCompute(img, None)
 img = cv2.drawKeypoints(img, keypoints, None)
 
-
-
-
 cv2.imshow("Image", img)
 cv2.waitKey(0)
 cv2.destroyAllWindows

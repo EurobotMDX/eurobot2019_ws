@@ -14,16 +14,16 @@ while (1):
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 
     # definig the range of red color
-    red_lower = np.array([136, 87, 0], np.uint8)
+    red_lower = np.array([0, 130, 255], np.uint8)
     red_upper = np.array([180, 255, 255], np.uint8)
 
     # defining the Range of Blue color
-    blue_lower = np.array([78, 50, 48], np.uint8)
+    blue_lower = np.array([60, 123, 120], np.uint8)
     blue_upper = np.array([118, 255, 255], np.uint8)
 
     # defining the Range of green color TODO: change to green
-    green_lower = np.array([22, 150, 67], np.uint8)
-    green_upper = np.array([39, 255, 255], np.uint8)
+    green_lower = np.array([28, 144, 203], np.uint8)
+    green_upper = np.array([180, 255, 255], np.uint8)
 
     # finding the range of red,blue and green color in the image
     red = cv2.inRange(hsv, red_lower, red_upper)

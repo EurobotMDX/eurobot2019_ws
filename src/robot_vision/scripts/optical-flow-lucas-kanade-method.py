@@ -47,7 +47,7 @@ while True:
         x, y = new_points.ravel()
         cv2.circle(frame, (x, y), 5, (0, 255, 0), -1)
 
-    # first_level = cv2.pyrDown(frame)
+    # first_level = cv2.pyrDown(frame) 
     # second_level = cv2.pyrDown(first_level)
 
     cv2.imshow("Frame", frame)

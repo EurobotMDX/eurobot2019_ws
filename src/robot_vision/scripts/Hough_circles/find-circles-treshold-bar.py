@@ -6,7 +6,7 @@ def nothing(x):
     pass
 
 # Load an image
-img = cv2.imread('ellipse.jpg')
+img = cv2.imread("blue-puk.png")
 
 # Resize The image
 if img.shape[1] > 600:

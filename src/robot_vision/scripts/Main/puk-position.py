@@ -48,7 +48,8 @@ for i in range(15):
     _, frame = vs.read()
 
 r = cv2.selectROI(frame)
-
+print(r)
+#time.sleep(555)
 # loop over the frames from the video stream
 while True:
 	_, frame = vs.read()
@@ -98,12 +99,8 @@ while True:
 	# cv2.imshow('Original',frame)
 	# cv2.imshow('Averaging',smoothed)
 
-
-
-
 	blur = cv2.GaussianBlur(res, (15, 15), 0)
 	cv2.imshow('Gaussian Blurring', blur)
-
 
 	_, puck = cv2.threshold(blur, 70, 255, cv2.THRESH_BINARY)
 	cv2.imshow('Puck',puck)

@@ -17,9 +17,10 @@ ap.add_argument("-b", "--buffer", type=int, default=64,
                 help="max buffer size")
 args = vars(ap.parse_args())
 
+#TODO: RED COLOR
 # define the lower and upper boundaries of the colors in the HSV color space
-lower = {'red': (136, 87, 0), 'green': (22, 150, 67), 'blue': (78, 50, 48)}  # assign new item lower['blue'] = (93, 10, 0)
-upper = {'red': (180, 255, 255), 'green': (39, 255, 255), 'blue': (118, 255, 255)}
+lower = {'red': (0, 130, 255), 'green': (28, 144, 203), 'blue': (60, 123, 120)}  # assign new item lower['blue'] = (93, 10, 0)
+upper = {'red': (180, 255, 255), 'green': (180, 255, 255), 'blue': (118, 255, 255)}
 
 # define standard colors for circle around the object
 colors = {'red': (0, 0, 255), 'green': (0, 255, 0), 'blue': (255, 0, 0)}

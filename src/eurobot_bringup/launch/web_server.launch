@@ -1,4 +1,0 @@
-<launch>
-	<!-- Launch Lazer Scanner -->
-	<include file="$(find web_server)/launch/web_server.launch" />
-</launch>

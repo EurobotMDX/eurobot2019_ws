@@ -1,5 +1,0 @@
-<launch>
-	<!-- Launch Serial Data Manager -->
-	<node name="serial_com_data_handler" pkg="sensor_drivers" type="serial_com_data_handler.py" output="screen">
-	</node>
-</launch>

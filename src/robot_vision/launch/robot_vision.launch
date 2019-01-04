@@ -1,0 +1,5 @@
+<launch>
+	<!-- Launch Web Server -->
+	<node name="robot_vision_node" pkg="robot_vision" type="ros_main.py" output="screen">
+	</node>
+</launch>

@@ -31,7 +31,6 @@
 		<param name="min_particles" type="double" value="30"/>
 		<param name="max_particles" type="double" value="100"/>
 		<remap from="scan" to="$(arg scan_topic)"/>
-		
 	</node>
 
 	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">

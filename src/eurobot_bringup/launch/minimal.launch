@@ -25,6 +25,7 @@
 
 	<include file="$(find eurobot_bringup)/launch/sensors.launch" />
 	<include file="$(find eurobot_bringup)/launch/web_server.launch" />
+	<include file="$(find robot_vision)/launch/robot_vision.launch" />
 
 	<!-- <node name="world_state_publisher" pkg="world_description" type="publish_world_tf.py" /> -->
 </launch>

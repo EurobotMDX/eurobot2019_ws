@@ -5,17 +5,18 @@ import rospy
 from sensor_msgs.msg import LaserScan
 
 class RangeSensor(object):
-	def __init__(self, frame_id="", min_range=0.0, max_range=0.5, min_angle=math.radians(-90.0), max_angle=math.radians(-60.0)):
+	def __init__(self, frame_id="", min_range=0.01, max_range=2.0, angle_range=math.radians(30.0)):
 		self.frame_id = frame_id
 
 		self.min_range = min_range
 		self.max_range = max_range
 
-		self.min_angle = min_angle
-		self.max_angle = max_angle
+		angle_range = abs(angle_range)
+		self.min_angle = -1.0 * (angle_range / 2.0)
+		self.max_angle = +1.0 * (angle_range / 2.0)
 		
 		self.num_readings = 10
-		self.angle_increment = abs(max_angle - min_angle) / self.num_readings
+		self.angle_increment = angle_range / self.num_readings
 
 		self.laser_frequency = 1000.0
 
@@ -29,7 +30,8 @@ class RangeSensor(object):
 		self.scan.angle_min = self.min_angle
 		self.scan.angle_max = self.max_angle
 		self.scan.angle_increment = self.angle_increment
-		self.scan.time_increment = 1.0 / (self.laser_frequency * float(self.num_readings))
+		self.scan.time_increment = 0
+		self.scan.scan_time = 0
 		self.scan.range_min = self.min_range
 		self.scan.range_max = self.max_range
 
@@ -44,12 +46,9 @@ class RangeSensor(object):
 			angle = (i * self.angle_increment) + self.min_angle
 			d = self.measured_range / math.cos(angle)
 			self.ranges.append(d)
-			self.intensities.append(d)
 
-		scan_time = rospy.Time.now()
-		
 		# populate the LaserScan message
-		self.scan.header.stamp = scan_time
+		self.scan.header.stamp = rospy.Time.now()
 		self.scan.ranges = self.ranges
 		self.scan.intensities = self.intensities
 

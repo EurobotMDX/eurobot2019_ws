@@ -19,9 +19,5 @@ footprint: [[-0.1, -0.0475], [-0.1, 0.2025], [0.1, 0.2025], [0.1, -0.0475]]
 
 inflation_radius: 0.05
 
-observation_sources: ultrasonic_front_sensor ultrasonic_back_sensor ultrasonic_left_sensor ultrasonic_right_sensor
-
-ultrasonic_front_sensor: {sensor_frame: ultrasonic_front_emission, data_type: LaserScan, topic: scan, marking: true, clearing: true}
-ultrasonic_back_sensor:  {sensor_frame: ultrasonic_back_emission , data_type: LaserScan, topic: scan, marking: true, clearing: true}
-ultrasonic_left_sensor:  {sensor_frame: ultrasonic_left , data_type: LaserScan, topic: scan, marking: true, clearing: true}
-ultrasonic_right_sensor: {sensor_frame: ultrasonic_right, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+observation_sources: laser_scanner_using_range_sensors
+laser_scanner_using_range_sensors: {sensor_frame: laser_scan_center_point, data_type: LaserScan, topic: scan, marking: true, clearing: true}

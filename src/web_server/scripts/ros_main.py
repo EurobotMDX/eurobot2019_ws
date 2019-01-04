@@ -1,4 +1,4 @@
-#!/usr/bin/emv python
+#!/usr/bin/env python
 
 import rospy
 from server import *

@@ -52,4 +52,4 @@ def shutdown_server():
     except:
         __log("Failed to exit server thread ...")
 
-    sys.exit(0)
+    # sys.exit(0)

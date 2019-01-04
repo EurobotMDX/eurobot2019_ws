@@ -3,6 +3,54 @@
 import cv2
 import numpy as np
 
+def combine_images(img_1, img_2, padding=5):
+    if not pi_video.is_cv_image_valid(img_1):
+        return None
+    
+    if not pi_video.is_cv_image_valid(img_2):
+        return None
+    
+    if not (len(img_1.shape) == len(img_2.shape)):
+        return None
+    
+    im_1_width = 0
+    im_1_height = 0
+    im_2_width = 0
+    im_2_height = 0
+
+    if len(img_1.shape) == 2:
+        im_1_height, im_1_width = img_1.shape
+        im_2_height, im_2_width = img_2.shape
+    elif len(img_1.shape) == 3:
+        im_1_height, im_1_width, _ = img_1.shape
+        im_2_height, im_2_width, _ = img_2.shape
+    
+    im_width = 0
+    im_height = 0
+
+    if im_1_width > im_1_height:
+        im_width = max(im_1_width, im_2_width)
+        im_height = im_1_height + padding + im_2_height
+    else:
+        im_width = im_1_width + padding + im_2_width
+        im_height = max(im_1_height, im_2_height)
+    
+    frame = np.zeros((im_height, im_width, 3), np.uint8)
+
+    if im_1_width > im_1_height:
+        frame[:im_1_height, :, :] = img_1
+        frame[im_1_height+padding:, :im_2_width, :] = img_2
+    else:
+        frame[:, :im_1_width, :] = img_1
+        frame[:im_2_height, im_1_width+padding:, :] = img_2
+    
+    try:
+        rospy.loginfo("[INFO] frame {} with {}".format(type(frame), frame.shape))
+    except:
+        pass
+    
+    return frame
+
 def is_cv_image_valid(cv_image):
 	if not isinstance(cv_image, np.ndarray):
 		return False

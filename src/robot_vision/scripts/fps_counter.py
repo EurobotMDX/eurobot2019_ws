@@ -32,7 +32,7 @@ if __name__ == '__main__' :
     start = time.time()
      
     # Grab a few frames
-    for i in ssssssrange(0, num_frames) :
+    for i in range(0, num_frames) :
         ret, frame = video.read()
  
      

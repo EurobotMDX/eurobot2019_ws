@@ -1,0 +1,2 @@
+rosrun rviz rviz
+roslaunch robot_vision robot_vision.launch

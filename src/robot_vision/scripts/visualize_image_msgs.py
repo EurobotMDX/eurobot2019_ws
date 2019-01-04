@@ -9,6 +9,7 @@ from cv_bridge import CvBridge, CvBridgeError
 from vector_illustration_processing import pi_video
 
 ros_image_msg_names = [
+    "test_image",
     "test_image"
 ]
 
@@ -64,7 +65,7 @@ class RosImageViewer(object):
                 if not pi_video.is_cv_image_valid(frame):
                     frame = ros_image_sub.get_frame()
                 else:
-                    frame = combine_images(frame, ros_image_sub.get_frame())
+                    frame = pi_video.combine_images(frame, ros_image_sub.get_frame())
             
             if pi_video.is_cv_image_valid(frame):
                 self.frame = frame

@@ -4,10 +4,10 @@ import cv2
 import numpy as np
 
 def combine_images(img_1, img_2, padding=5):
-    if not pi_video.is_cv_image_valid(img_1):
+    if not is_cv_image_valid(img_1):
         return None
     
-    if not pi_video.is_cv_image_valid(img_2):
+    if not is_cv_image_valid(img_2):
         return None
     
     if not (len(img_1.shape) == len(img_2.shape)):

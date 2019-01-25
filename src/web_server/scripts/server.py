@@ -2,7 +2,10 @@ import os, sys
 sys.path.insert(0,os.path.dirname(os.path.realpath(__file__)))
 
 import time
+import random
 from server_config import *
+
+should_activate_experiment = False
 
 def __log(status="INFO", message=""):
     print("[{status}] {message}".format(status=status, message=message))
@@ -15,6 +18,24 @@ def __log(status="INFO", message=""):
 @app.route("/")
 def index():
     return render_template("index.html", logged_in=False)
+
+
+@app.route("/activate_experiment")
+def activate_experiment():
+    global should_activate_experiment
+    should_activate_experiment = True
+    return "Experiment Activated"
+
+@app.route("/deactivate_experiment")
+def deactivate_experiment():
+    global should_activate_experiment
+    should_activate_experiment = False
+    return "Experiment Deactivated"
+
+@app.route("/start_experiment")
+def start_experiment():
+    global should_activate_experiment
+    return "{{" + str(should_activate_experiment) + "}}"
 
 @app.route("/test")
 def test():

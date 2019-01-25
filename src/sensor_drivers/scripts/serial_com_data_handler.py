@@ -6,7 +6,8 @@ from std_msgs.msg import String
 import serial
 
 # DEFAULT_PORT = "/dev/serial/by-path/platform-12120000.usb-usb-0:1:1.0"
-DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.2:1.0"
+DEFAULT_PORT = "/dev/serial/by-path/platform-12120000.usb-usb-0:1.2:1.0"
+# DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.2:1.0"
 DEFAULT_BAUD = 230400
 DEFAULT_LOOP_RATE = 10
 
@@ -22,6 +23,7 @@ class SerialDataHandler(object):
         self._data_buffer = ""
 
         self.range_data_pub = rospy.Publisher('raw_range_data', String, queue_size=10)
+        self.msg_subscriber  = rospy.Subscriber('serial_data_handler_msg', String, self.msg_received)
         # self.compass_data_pub = rospy.Publisher('raw_compass_data', String, queue_size=10)
     
     def initialize(self):
@@ -42,6 +44,15 @@ class SerialDataHandler(object):
     def terminate(self):
         if self.serial_device is not None:
             self.serial_device.close()
+    
+    def msg_received(self, msg):
+        if self.serial_device is None:
+            rospy.loginfo("[INFO] Arduino is not connected")
+            return
+
+        rospy.loginfo("[INFO] serial manager is sending {} to the arduino",format(msg.data))
+        self.serial_device.write(msg.data)
+
     
     def _read_data_buffer(self):
         if self.serial_device is None:

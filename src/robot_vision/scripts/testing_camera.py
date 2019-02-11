@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 from __future__ import division, print_function
 
+import cv2
+import numpy as np
+import argparse
+#import imutils
+
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from vector_illustration_processing import pi_video
@@ -30,6 +35,11 @@ class CameraTest(object):
 
             # read frame from the camera
             frame = self.camera.get_next_frame()
+
+            # code goes here
+
+            
+            image = cv2.imread("red-puk.png")
 
             # validate the frame
             if not pi_video.is_cv_image_valid(frame):

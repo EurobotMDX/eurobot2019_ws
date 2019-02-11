@@ -42,7 +42,7 @@ class RosImageViewer(object):
         
         self.frame = None
         self.viewer = pi_video.Viewer(fps=fps, title=title)
-        self.viewer.start()
+        self.viewer.start() 
     
     def initialize(self, ros_image_msg_names):
         self.ros_image_msg_names = ros_image_msg_names

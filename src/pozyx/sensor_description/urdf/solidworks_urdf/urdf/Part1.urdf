@@ -1,0 +1,43 @@
+<robot
+  name="Part1.SLDPRT">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-1.1434E-09 -5.10509998385173E-10 0.026373"
+        rpy="0 0 0" />
+      <mass
+        value="0.46298" />
+      <inertia
+        ixx="0.000450062039475944"
+        ixy="2.81450649005927E-12"
+        ixz="7.17107637879545E-12"
+        iyy="0.000450062040638538"
+        iyz="-3.6075867387189E-12"
+        izz="0.000654079899366966" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="file://home/marlon/sensors_ws/src/sensor_description/urdf/solidworks_urdf/meshes/eula.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.79216 0.81961 0.93333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="1.5707963267949 0 0" />
+      <geometry>
+        <mesh
+          filename="file://home/marlon/sensors_ws/src/sensor_description/urdf/solidworks_urdf/meshes/eula.STL" />
+      </geometry>
+    </collision>
+  </link>
+</robot>

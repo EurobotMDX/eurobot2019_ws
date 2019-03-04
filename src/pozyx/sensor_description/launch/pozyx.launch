@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+
+<launch>
+    <arg name="model" default="$(find pozyx)/sensor_description/urdf/pozyx.urdf"/>
+    <arg name="gui" default="True" />
+    <arg name="rvizconfig" default="$(find urdf_tutorial)/rviz/urdf.rviz" />
+    
+    <param name="robot_description" command="cat $(find pozyx)/sensor_description/urdf/pozyx.urdf " />
+    <param name="use_gui" value="$(arg gui)"/>
+    
+   
+   
+   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(arg rvizconfig)" required="true" />
+  <node name="base_link_to_world" pkg="pozyx" type="tf_pozyx_broadcaster.py"/>
+  <node name="pozyx_position" pkg="pozyx" type="serialRead.py" />
+  <node name="map_server" pkg="map_server" type="map_server" args="$(find pozyx)/maps/Sample_map.yaml" required="True" output="screen">
+   <param name="frame_id" value="/map"/>
+</node>
+  <!--<node name="initial_pose" pkg="pozyx" type="initialPose_subscriber.py" output="screen"/>-->
+    
+</launch>

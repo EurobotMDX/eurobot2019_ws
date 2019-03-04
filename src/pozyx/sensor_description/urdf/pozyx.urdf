@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<robot name="pozyx1">
+    <material name="white">
+    <color rgba="1 1 1 1"/>
+    </material>
+    <link name="base_link">
+    <visual>
+        <geometry>
+            <box size="0.1 0.1 0.1"/>
+        </geometry>
+       <!-- <origin rpy="0 0 0" xyz="0 0 1"/> --> 
+        <material name="white"/>
+    </visual>
+    </link>	
+</robot>

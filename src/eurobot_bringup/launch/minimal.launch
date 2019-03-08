@@ -23,7 +23,7 @@
 
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
 
-	<!-- <include file="$(find eurobot_bringup)/launch/sensors.launch" /> -->
+	<include file="$(find eurobot_bringup)/launch/sensors.launch" />
 	<include file="$(find eurobot_bringup)/launch/web_server.launch" />
 	<!-- <include file="$(find robot_vision)/launch/robot_vision.launch" /> -->
 

@@ -74,11 +74,11 @@ bool publish_odometry(ros::Publisher &odometry_publisher)
 
 	// std::cout << "lt counts: " << left_position << std::endl;
 	// std::cout << "rt counts: " << right_position << std::endl;
-	std::cout << "vx: " << drive_train_manager.current_vx << std::endl;
-	std::cout << "vy: " << drive_train_manager.current_vy << std::endl;
-	std::cout << "x: " << drive_train_manager.current_x << std::endl;
-	std::cout << "y: " << drive_train_manager.current_y << std::endl;
-	std::cout << "theta: " << (drive_train_manager.current_theta / M_PI) * 180.0 << std::endl << std::endl;
+	// std::cout << "vx: " << drive_train_manager.current_vx << std::endl;
+	// std::cout << "vy: " << drive_train_manager.current_vy << std::endl;
+	// std::cout << "x: " << drive_train_manager.current_x << std::endl;
+	// std::cout << "y: " << drive_train_manager.current_y << std::endl;
+	// std::cout << "theta: " << (drive_train_manager.current_theta / M_PI) * 180.0 << std::endl << std::endl;
 
 	return true;
 }

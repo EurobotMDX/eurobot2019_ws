@@ -5,10 +5,8 @@ from std_msgs.msg import String
 
 import serial
 
-# DEFAULT_PORT = "/dev/serial/by-path/platform-12120000.usb-usb-0:1:1.0"
-DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.1:1.0"
-# DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.2:1.0"
-DEFAULT_BAUD = 230400
+DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.1:1.0-port0"
+DEFAULT_BAUD = 115200
 DEFAULT_LOOP_RATE = 10
 
 class SerialDataHandler(object):
@@ -50,8 +48,8 @@ class SerialDataHandler(object):
             rospy.loginfo("[INFO] Arduino is not connected")
             return
 
-        rospy.loginfo("[INFO] serial manager is sending {} to the arduino",format(msg.data))
-        self.serial_device.write(msg.data)
+        rospy.loginfo("[INFO] serial manager is sending {} to the arduino".format(msg.data))
+        self.serial_device.write(str(msg.data))
 
     
     def _read_data_buffer(self):

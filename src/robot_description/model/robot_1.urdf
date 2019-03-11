@@ -3,7 +3,7 @@
     <link name="base_link">
         <visual>
             <geometry>
-                <box size="0.20 0.250 0.051"/>
+                <box size="0.18 0.18 0.051"/> <!-- x y z -->
             </geometry>
             <material name="white">
                 <color rgba="1 1 1 0.2"/>
@@ -24,7 +24,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="wheel_left"/>
-        <origin rpy="1.57079632679 0 1.57079632679" xyz="-0.0914 -0.0775 -.0105"/>
+        <origin rpy="1.57079632679 0 1.57079632679" xyz="-0.0857 0.0485 -.0105"/>
     </joint>
     <link name="wheel_right">
         <visual>
@@ -40,9 +40,9 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="wheel_right"/>
-        <origin rpy="1.57079632679 0 1.57079632679" xyz="0.0914 -0.0775 -.0105"/>
+        <origin rpy="1.57079632679 0 1.57079632679" xyz="0.0857 0.0485 -.0105"/>
     </joint>
-    <link name="caster">
+    <link name="left_caster">
         <visual>
             <geometry>
                 <sphere radius="0.017" />
@@ -52,11 +52,28 @@
             </material>
         </visual>
     </link>
-    <joint name="caster_joint" type="fixed">
+    <joint name="left_caster_joint" type="fixed">
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
-        <child link="caster"/>
-        <origin rpy="0 0 0" xyz="0 0.07 -0.0235"/>
+        <child link="left_caster"/>
+        <origin rpy="0 0 0" xyz="-0.05 -0.07 -0.0235"/>
+    </joint>
+
+    <link name="right_caster">
+        <visual>
+            <geometry>
+                <sphere radius="0.017" />
+            </geometry>
+            <material name="red">
+                <color rgba="1 0. 0. 1"/>
+            </material>
+        </visual>
+    </link>
+    <joint name="right_caster_joint" type="fixed">
+        <axis xyz="1 1 1"/>
+        <parent link="base_link"/>
+        <child link="right_caster"/>
+        <origin rpy="0 0 0" xyz="0.05 -0.07 -0.0235"/>
     </joint>
 
     <!-- ultrasonic sensors -->
@@ -75,7 +92,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_front"/>
-        <origin rpy="0 0 0" xyz="0 0.11 -0.011"/>
+        <origin rpy="0 0 0" xyz="0 0.075 -0.011"/>
     </joint>
 
     <link name="ultrasonic_front_emission_point">
@@ -92,7 +109,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_front_emission_point"/>
-        <origin rpy="0 0 1.57079632679" xyz="0 0.11 -0.011"/>
+        <origin rpy="0 0 1.57079632679" xyz="0 0.075 -0.011"/>
     </joint>
     
     <link name="ultrasonic_back">
@@ -109,7 +126,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_back"/>
-        <origin rpy="0 0 3.141592654" xyz="0 -0.11 -0.011"/>
+        <origin rpy="0 0 3.141592654" xyz="0 -0.075 -0.011"/>
     </joint>
 
     <link name="ultrasonic_back_emission_point">
@@ -126,7 +143,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_back_emission_point"/>
-        <origin rpy="0 0 -1.57079632679" xyz="0 -0.11 -0.011"/>
+        <origin rpy="0 0 -1.57079632679" xyz="0 -0.075 -0.011"/>
     </joint>
 
     <link name="ultrasonic_left">
@@ -143,7 +160,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_left"/>
-        <origin rpy="0 0 1.57079632679" xyz="-0.085 0.086 -0.011"/>
+        <origin rpy="0 0 1.57079632679" xyz="-0.075 0.0395 -0.011"/>
     </joint>
 
     <link name="ultrasonic_left_emission_point">
@@ -160,7 +177,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_left_emission_point"/>
-        <origin rpy="0 0 3.141592654" xyz="-0.085 0.086 -0.011"/>
+        <origin rpy="0 0 3.141592654" xyz="-0.075 0.0395 -0.011"/>
     </joint>
 
     <link name="ultrasonic_right">
@@ -177,7 +194,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_right"/>
-        <origin rpy="0 0 -1.57079632679" xyz="0.085 0.086 -0.011"/>
+        <origin rpy="0 0 -1.57079632679" xyz="0.075 0.0395 -0.011"/>
     </joint>
 
     <link name="ultrasonic_right_emission_point">
@@ -194,7 +211,7 @@
         <axis xyz="1 1 1"/>
         <parent link="base_link"/>
         <child link="ultrasonic_right_emission_point"/>
-        <origin rpy="0 0 0" xyz="0.085 0.086 -0.011"/>
+        <origin rpy="0 0 0" xyz="0.075 0.0395 -0.011"/>
     </joint>
 
     <link name="laser_scan_center_point">
@@ -233,7 +250,7 @@
 
     <gazebo>
         <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
-            <jointName>wheel_left_joint, wheel_right_joint, caster_joint, ultrasonic_front_joint, ultrasonic_back_joint, ultrasonic_left_joint, ultrasonic_right_joint, ultrasonic_front_emission_point, ultrasonic_back_emission_point, ultrasonic_left_emission_point, ultrasonic_right_emission_point, laser_scan_center_joint</jointName>
+            <jointName>wheel_left_joint, wheel_right_joint, right_caster_joint, left_caster_joint, ultrasonic_front_joint, ultrasonic_back_joint, ultrasonic_left_joint, ultrasonic_right_joint, ultrasonic_front_emission_point, ultrasonic_back_emission_point, ultrasonic_left_emission_point, ultrasonic_right_emission_point, laser_scan_center_joint</jointName>
         </plugin>
     </gazebo>
 </robot>

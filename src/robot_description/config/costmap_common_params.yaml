@@ -9,7 +9,7 @@ obstacle_range: 0.35
 raytrace_range: 0.03
 
 
-footprint: [[-0.1, -0.0475], [-0.1, 0.2025], [0.1, 0.2025], [0.1, -0.0475]]
+footprint: [[-0.09, -0.09], [-0.09, 0.09], [0.09, 0.09], [0.09, -0.09]]
 
 
 # The inflation radius should be set to the maximum distance from obstacles at which a
@@ -17,7 +17,7 @@ footprint: [[-0.1, -0.0475], [-0.1, 0.2025], [0.1, 0.2025], [0.1, -0.0475]]
 #that the robot will treat all paths that stay x meters or more away from obstacles as
 #having equal obstacle cost.
 
-inflation_radius: 0.05
+inflation_radius: 0.04
 
-observation_sources: laser_scanner_using_range_sensors
-laser_scanner_using_range_sensors: {sensor_frame: laser_scan_center_point, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+observation_sources: point_cloud_sensor
+point_cloud_sensor: {sensor_frame: point_cloud_sensor_frame, data_type: PointCloud, topic: point_cloud, marking: true, clearing: true}

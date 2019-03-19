@@ -72,7 +72,7 @@ bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0
 	return true;
 }
 
-bool DriveTrainManager::terminate() const
+bool DriveTrainManager::terminate()
 {
 	bool status = true;
 
@@ -86,6 +86,7 @@ bool DriveTrainManager::terminate() const
 		status = false;
 	}
 
+	should_run = false;
 	return status;
 }
 

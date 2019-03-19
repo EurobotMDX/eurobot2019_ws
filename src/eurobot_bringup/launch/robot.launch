@@ -1,43 +1,18 @@
 <launch>
 	<master auto="start"/>
-
-	<arg name="publish_rate"    value="5"/>
 	
-	<arg name="map_topic"       value="map"/> 
-	<arg name="scan_topic"      value="scan"/> 
-	
-	<arg name="global_frame_id" value="map"/>
-	<arg name="odom_frame_id"   value="odom"/>
-	<arg name="base_frame_id"   value="base_link"/>
-	<arg name="scan_frame_id"   value="ultra_scan"/>
-
-	<arg name="map_file"        value="$(find world_description)/maps/01/map_01.yaml"/>
+	<arg name="map_file" value="$(find world_description)/maps/01/map_01.yaml"/>
 	
 	<include file="$(find eurobot_bringup)/launch/minimal.launch" />
 
 	<!--Run the map server using a static map-->
     <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_file)"/>
 
-	<!-- Run AMCL -->
-	<node pkg="amcl" type="amcl" name="amcl" output="screen">
-		<param name="tf_broadcast"   value="true"/>
-		<param name="use_map_topic"   value="true"/>
-		<param name="odom_model_type" value="diff"/>
-		
-		<param name="odom_frame_id"   value="$(arg odom_frame_id)"/>
-		<param name="base_frame_id"   value="$(arg base_frame_id)"/>
-		<param name="global_frame_id" value="$(arg global_frame_id)"/>
-
-		<param name="min_particles" type="double" value="30"/>
-		<param name="max_particles" type="double" value="100"/>
-		<remap from="scan" to="$(arg scan_topic)"/>
-	</node>
-
-	<node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+	<!-- <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 	    <rosparam file="$(find robot_description)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
 	    <rosparam file="$(find robot_description)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
 	    <rosparam file="$(find robot_description)/config/local_costmap_params.yaml" command="load" />
 	    <rosparam file="$(find robot_description)/config/global_costmap_params.yaml" command="load" />
 	    <rosparam file="$(find robot_description)/config/base_local_planner_params.yaml" command="load" />
-	</node>
+	</node> -->
 </launch>

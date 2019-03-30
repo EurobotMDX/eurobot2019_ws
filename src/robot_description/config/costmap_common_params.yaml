@@ -6,10 +6,10 @@ obstacle_range: 0.35
 #given a sensor reading. Setting it to x meters as we have above means that the robot will
 #attempt to clear out space in front of it up to x meters away given a sensor reading.
 
-raytrace_range: 0.03
+raytrace_range: 0.1
 
 
-footprint: [[-0.09, -0.09], [-0.09, 0.09], [0.09, 0.09], [0.09, -0.09]]
+footprint: [[-0.09, -0.1385], [-0.09, 0.0415], [0.09, 0.0415], [0.09, -0.1385]]
 
 
 # The inflation radius should be set to the maximum distance from obstacles at which a
@@ -19,5 +19,14 @@ footprint: [[-0.09, -0.09], [-0.09, 0.09], [0.09, 0.09], [0.09, -0.09]]
 
 inflation_radius: 0.04
 
-observation_sources: point_cloud_sensor
-point_cloud_sensor: {sensor_frame: point_cloud_sensor_frame, data_type: PointCloud, topic: point_cloud, marking: true, clearing: true}
+observation_sources: front_point_cloud_sensor
+point_cloud_sensor: {sensor_frame: ultrasonic_front_emission_point, data_type: PointCloud, topic: front_point_cloud_data, marking: true, clearing: true}
+
+observation_sources: back_point_cloud_sensor
+point_cloud_sensor: {sensor_frame: ultrasonic_back_emission_point, data_type: PointCloud, topic: back_point_cloud_data, marking: true, clearing: true}
+
+observation_sources: left_point_cloud_sensor
+point_cloud_sensor: {sensor_frame: ultrasonic_left_emission_point, data_type: PointCloud, topic: left_point_cloud_data, marking: true, clearing: true}
+
+observation_sources: right_point_cloud_sensor
+point_cloud_sensor: {sensor_frame: ultrasonic_right_emission_point, data_type: PointCloud, topic: right_point_cloud_data, marking: true, clearing: true}

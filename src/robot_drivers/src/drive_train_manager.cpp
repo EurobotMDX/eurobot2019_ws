@@ -292,11 +292,11 @@ bool DriveTrainManager::update_odometry()
 
 	current_vx = dx / dt;
 	current_vy = dy / dt;
-	current_vtheta = (theta - current_theta) / dt;
+	current_vtheta = -1.0 * ((theta - current_theta) / dt);
 
 	current_x += dx;
 	current_y += dy;
-	current_theta = theta;
+	current_theta = -1.0 * theta;
 	
 	last_update_time = current_time;
 	last_left_position = current_left_position;

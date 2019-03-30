@@ -7,6 +7,10 @@ std::string odom_frame_id;
 std::string base_frame_id;
 std::string global_frame_id;
 
+double odom_offset_x = 0.0;
+double odom_offset_y = 0.0;
+double odom_offset_yaw = 0.0;
+
 /* Create an instance of the {@DriveTrainManager drive_train_manager} */
 DriveTrainManager drive_train_manager;
 
@@ -22,6 +26,38 @@ void twist_callback(const geometry_msgs::Twist::ConstPtr& msg)
 	drive_train_manager.set_motion(linear_vel, angular_vel);
 }
 
+void reset_drive_train_callback(const std_msgs::Bool::ConstPtr& msg)
+{
+	bool should_reset = msg->data;
+
+	if (should_reset)
+	{
+		drive_train_manager.reset();
+	}
+}
+
+
+void update_drive_train_position_callback(const geometry_msgs::PoseWithCovarianceStamped::ConstPtr& msg)
+{
+	double roll, pitch, yaw;
+
+	// reset the drive train
+	drive_train_manager.reset();
+
+	geometry_msgs::Pose new_pose = msg->pose.pose;
+	tf::Quaternion q(new_pose.orientation.x, new_pose.orientation.y, new_pose.orientation.z, new_pose.orientation.w);
+	tf::Matrix3x3 m(q);
+
+	m.getRPY(roll, pitch, yaw);
+
+	// std::cout << "q: " << new_pose.orientation.x << ", " << new_pose.orientation.y << ", " << new_pose.orientation.z << ", " << new_pose.orientation.w << std::endl;
+	// std::cout << "RPY: " << roll << ", " << pitch << ", " << yaw << std::endl;
+
+	odom_offset_x = new_pose.position.x;
+	odom_offset_y = new_pose.position.y;
+	odom_offset_yaw = yaw - M_PI_2;
+}
+
 
 /**
  *  This funciton publishes {@Quaternion odom_quaternion} messages on the topic {@nh.advertise<nav_msgs::Odometry>(odom_frame_id 50) odometry_publisher}
@@ -33,9 +69,12 @@ bool publish_odometry(ros::Publisher &odometry_publisher)
 	tf::Transform transform;
 	tf::Quaternion q;
 
+	ros::Time _time = ros::Time::now() + ros::Duration(10);
+
 	// broadcast the transform between the map and the odom frame
-	transform.setOrigin( tf::Vector3(0.0, 0.0, 0.0) );
-	q.setRPY(0,0,0);
+	transform.setOrigin( tf::Vector3(odom_offset_x, odom_offset_y, 0.0) );
+	q.setRPY(0,0,odom_offset_yaw);
+	q.normalize();
 	transform.setRotation(q);
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), global_frame_id, odom_frame_id));
 
@@ -43,6 +82,7 @@ bool publish_odometry(ros::Publisher &odometry_publisher)
 	// see: wiki.ros.org/amcl  towards the bottom of the page there's a really nice page on {map_frame, odom_frame, base_frame}
 	transform.setOrigin( tf::Vector3(drive_train_manager.current_x, drive_train_manager.current_y, 0.0) );
 	q.setRPY(0,0, drive_train_manager.current_theta);
+	q.normalize();
 	transform.setRotation(q);
 	br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), odom_frame_id, base_frame_id));
 
@@ -105,7 +145,7 @@ int main(int argc, char *argv[])
 	bool status = true;
 
 	int publish_rate;
-	nh.param<int>("publish_rate", publish_rate, 5);
+	nh.param<int>("publish_rate", publish_rate, 10);
 	nh.param<std::string>("odom_frame_id", odom_frame_id, "odom");
 	nh.param<std::string>("base_frame_id", base_frame_id, "base_link");
 	nh.param<std::string>("global_frame_id", global_frame_id, "map");
@@ -122,14 +162,17 @@ int main(int argc, char *argv[])
 		ROS_INFO("Setup successful");
 		ros::Subscriber twist_subscriber = nh.subscribe("/cmd_vel", 10, twist_callback);
 		ros::Subscriber teleop_subscriber = nh.subscribe("/cmd_vel_mux/input/teleop", 10, twist_callback);
+		ros::Subscriber reset_drive_train_subscriber = nh.subscribe("reset_drive_train", 10, reset_drive_train_callback);
+		ros::Subscriber initialpose_subscriber = nh.subscribe("initialpose", 10, update_drive_train_position_callback);
+		ros::Subscriber update_drive_train_position_subscriber = nh.subscribe("update_drive_train_position", 10, update_drive_train_position_callback);
 		ros::Publisher odometry_publisher = nh.advertise<nav_msgs::Odometry>("odom", publish_rate);
 
 		std::thread odometry_update_loop(odometry_loop);
 
-		std::cout << "publish_rate: " << publish_rate << std::endl;
-		std::cout << "global_frame_id: " << global_frame_id << std::endl;
-		std::cout << "odom_frame_id: " << odom_frame_id << std::endl;
-		std::cout << "base_frame_id: " << base_frame_id << std::endl;
+		// std::cout << "publish_rate: " << publish_rate << std::endl;
+		// std::cout << "global_frame_id: " << global_frame_id << std::endl;
+		// std::cout << "odom_frame_id: " << odom_frame_id << std::endl;
+		// std::cout << "base_frame_id: " << base_frame_id << std::endl;
 
 		ros::Rate loop_rate(publish_rate);
 		while (ros::ok)

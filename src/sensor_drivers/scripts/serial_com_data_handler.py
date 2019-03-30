@@ -1,11 +1,12 @@
 #!/usr/bin/env python
 
+import json
 import rospy
-from std_msgs.msg import String
+from std_msgs.msg import String, Bool
 
 import serial
 
-DEFAULT_PORT = "/dev/serial/by-path/platform-12110000.usb-usb-0:1.1:1.0-port0"
+DEFAULT_PORT = "/dev/serial/by-id/usb-1a86_USB2.0-Serial-if00-port0"
 DEFAULT_BAUD = 115200
 DEFAULT_LOOP_RATE = 10
 
@@ -21,6 +22,7 @@ class SerialDataHandler(object):
         self._data_buffer = ""
 
         self.range_data_pub = rospy.Publisher('raw_range_data', String, queue_size=10)
+        self.p2s_pub = rospy.Publisher('pull_to_start', Bool, queue_size=10)
         self.msg_subscriber  = rospy.Subscriber('serial_data_handler_msg', String, self.msg_received)
         # self.compass_data_pub = rospy.Publisher('raw_compass_data', String, queue_size=10)
     
@@ -60,25 +62,32 @@ class SerialDataHandler(object):
 
         return True
     
-    def get_raw_range_msg_as_str(self):
+    def get_raw_msg_as_data(self):
         if self._data_buffer is None:
-            return "[]"
+            return None
         
-        if not "]" in self._data_buffer: return "[]"
-        raw_msg_data_as_str = self._data_buffer[:self._data_buffer.rfind(']')]
+        if not "}" in self._data_buffer: return None
+        raw_msg_as_str = self._data_buffer[:self._data_buffer.rfind('}')]
 
-        if not "[" in raw_msg_data_as_str: return "[]"
-        raw_msg_data_as_str = raw_msg_data_as_str[raw_msg_data_as_str.rfind('[') + 1:]
+        if not "{" in raw_msg_as_str: return None
+        raw_msg_as_str = raw_msg_as_str[raw_msg_as_str.rfind('{') + 1:]
 
         self._data_buffer = ""
-        return "[" + raw_msg_data_as_str + "]"
+        data = raw_msg_as_str.split(":")
+        return [data[1][:-4], int(data[2][0])] #(json.loads"{" + raw_msg_as_str + "}")
     
     def run(self):
         while not rospy.is_shutdown():
             self._read_data_buffer()
             
-            msg_str = self.get_raw_range_msg_as_str()
-            self.range_data_pub.publish(msg_str)
+            msg_data = self.get_raw_msg_as_data()
+
+            # rospy.loginfo("ard msg: {}".format(msg_data))
+
+            if msg_data is not None:
+                self.range_data_pub.publish(msg_data[0])
+                self.p2s_pub.publish(msg_data[1])
+            
             self.rate.sleep()
 
 

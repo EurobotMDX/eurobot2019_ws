@@ -31,8 +31,5 @@
 	<include file="$(find eurobot_bringup)/launch/web_server.launch" />
 
 	<!-- <node pkg="tf" type="static_transform_publisher" name="map_transform_broadcaster" args="0 0 0 0 0 0 1 /map /odom 100" /> -->
-
 	<!-- <include file="$(find robot_vision)/launch/robot_vision.launch" /> -->
-
-	<!-- <node name="world_state_publisher" pkg="world_description" type="publish_world_tf.py" /> -->
 </launch>

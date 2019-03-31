@@ -1,12 +1,12 @@
 # Obstacle range: determines the maximum range sensor reading that will result in an obstacle being put into the costmap
-obstacle_range: 0.35
+obstacle_range: 0.7
 
 
 #The "raytrace_range" parameter determines the range to which we will raytrace freespace
 #given a sensor reading. Setting it to x meters as we have above means that the robot will
 #attempt to clear out space in front of it up to x meters away given a sensor reading.
 
-raytrace_range: 0.1
+raytrace_range: 0.5
 
 
 footprint: [[-0.09, -0.1385], [-0.09, 0.0415], [0.09, 0.0415], [0.09, -0.1385]]
@@ -17,7 +17,7 @@ footprint: [[-0.09, -0.1385], [-0.09, 0.0415], [0.09, 0.0415], [0.09, -0.1385]]
 #that the robot will treat all paths that stay x meters or more away from obstacles as
 #having equal obstacle cost.
 
-inflation_radius: 0.04
+inflation_radius: 0.1
 
 observation_sources: front_point_cloud_sensor
 point_cloud_sensor: {sensor_frame: ultrasonic_front_emission_point, data_type: PointCloud, topic: front_point_cloud_data, marking: true, clearing: true}

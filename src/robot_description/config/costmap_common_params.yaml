@@ -14,6 +14,21 @@ raytrace_range: 0.4
 # defines the coordinates of the robot outline, will be considered during collision detection
 footprint: [[-0.09, -0.1385], [-0.09, 0.0415], [0.09, 0.0415], [0.09, -0.1385]]
 
+# defines the topic where occupancy grid is published
+map_topic: /map
+
+# defines if move_base should periodically check if map was updated
+subscribe_to_updates: true
+
+# defines coordinate frame tied to occupancy grid map
+global_frame: map
+
+# defines coordinate frame tied to robot
+robot_base_frame: base_link
+
+# defines if costmap should always be published with complete data
+always_send_full_costmap: true
+
 # The inflation radius should be set to the maximum distance from obstacles at which a
 #cost should be incurred. For example, setting the inflation radius at x meters means
 #that the robot will treat all paths that stay x meters or more away from obstacles as

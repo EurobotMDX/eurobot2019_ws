@@ -34,7 +34,8 @@ always_send_full_costmap: true
 #that the robot will treat all paths that stay x meters or more away from obstacles as
 #having equal obstacle cost.
 
-inflation_radius: 0.1
+# distance to obstacles where cost should be considered
+inflation_radius: 0.3
 
 observation_sources: front_point_cloud_sensor
 point_cloud_sensor: {sensor_frame: ultrasonic_front_emission_point, data_type: PointCloud, topic: front_point_cloud_data, marking: true, clearing: true}

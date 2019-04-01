@@ -58,7 +58,7 @@ class SerialDataHandler(object):
         if self.serial_device is None:
             return False
 
-        self._data_buffer = self._data_buffer + self.serial_device.read(self.serial_device.in_waiting)
+        self._data_buffer = self._data_buffer + self.serial_device.readall() #(self.serial_device.in_waiting)
 
         return True
     
@@ -74,7 +74,12 @@ class SerialDataHandler(object):
 
         self._data_buffer = ""
         data = raw_msg_as_str.split(":")
-        return [data[1][:-4], int(data[2][0])] #(json.loads"{" + raw_msg_as_str + "}")
+        
+        try:
+            return [data[1][:-4], int(data[2][0])] #(json.loads"{" + raw_msg_as_str + "}")
+        except IndexError:
+            rospy.loginfo("Index Error: reading data: {}".format(data))
+            return None
     
     def run(self):
         while not rospy.is_shutdown():

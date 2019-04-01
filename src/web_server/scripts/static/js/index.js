@@ -17,6 +17,9 @@ var getJSON = function(url, callback) {
 var gripper_open_action_btn  = document.getElementById("gripper_open_action_btn");
 var gripper_close_action_btn = document.getElementById("gripper_close_action_btn");
 
+var pusher_left_action_btn  = document.getElementById("pusher_left_action_btn");
+var pusher_right_action_btn = document.getElementById("pusher_right_action_btn");
+
 var experiment_activate_action_btn  = document.getElementById("experiment_activate_action_btn");
 var experiment_deactivate_action_btn = document.getElementById("experiment_deactivate_action_btn");
 
@@ -33,6 +36,16 @@ gripper_open_action_btn.onclick = function()
 gripper_close_action_btn.onclick = function()
 {
     getJSON(window.location.href + "close_gripper", ()=>{});
+}
+
+pusher_left_action_btn.onclick = function()
+{
+    getJSON(window.location.href + "push_left", ()=>{});
+}
+
+pusher_right_action_btn.onclick = function()
+{
+    getJSON(window.location.href + "push_right", ()=>{});
 }
 
 experiment_activate_action_btn.onclick = function()

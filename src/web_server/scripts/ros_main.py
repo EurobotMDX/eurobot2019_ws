@@ -30,6 +30,20 @@ def close_gripper():
     serial_data_pub.publish(msg)
     return "Gripper Closed"
 
+@app.route("/push_left")
+def push_left():
+    msg = String()
+    msg.data = "{s,2,2.2}"
+    serial_data_pub.publish(msg)
+    return "Pushing Left"
+
+@app.route("/push_right")
+def push_right():
+    msg = String()
+    msg.data = "{s,2,0.6}"
+    serial_data_pub.publish(msg)
+    return "Pushing Right"
+
 
 __log("Starting web server")
 thread.start_new_thread(app.run, (HOST, PORT))

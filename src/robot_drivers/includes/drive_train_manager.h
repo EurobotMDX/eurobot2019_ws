@@ -31,6 +31,7 @@ public:
 	virtual bool set_motion(const double linear_velocity, const double angular_velocity) const;
 
 	virtual bool reset_encoders() const;
+	virtual bool reset_values();
 	virtual bool stop() const;
 
 	EposDriveManager left_wheel;
@@ -56,5 +57,9 @@ public:
 	double current_vy;
 	double current_vtheta;
 
+	int last_left_position;
+	int last_right_position;
+
+	bool is_initialized;
 	bool should_run;
 };

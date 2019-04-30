@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import rospy
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String, Bool, Float32
 from sensor_msgs.msg import Range
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
@@ -26,6 +26,23 @@ robot_position = {
             "yaw" : 0.0
         }
 
+pull_to_start_state = True
+robot_score = 0.0
+    
+def pull_to_start_callback(msg):
+    global pull_to_start_state
+
+    pull_to_start_state = msg.data
+
+rospy.Subscriber('pull_to_start', Bool, pull_to_start_callback)
+
+def robot_score_callback(msg):
+    global robot_score
+
+    robot_score = msg.data
+
+rospy.Subscriber('robot_score', Float32, robot_score_callback)
+
 def update_robot_position(odometry_msg):
     robot_pose = odometry_msg.pose.pose
 
@@ -49,6 +66,20 @@ def reset_odometry():
 @app.route("/get_robot_position")
 def get_robot_position():
     return json.dumps(robot_position)
+
+@app.route("/get_robot_score")
+def get_robot_score():
+    global robot_score
+    
+    data = {"s":robot_score}
+    return json.dumps(data)
+
+@app.route("/get_pull_to_start")
+def get_pull_to_start():
+    global pull_to_start_state
+
+    data = {"p2s":pull_to_start_state}
+    return json.dumps(data)
 
 @app.route("/open_gripper")
 def open_gripper():

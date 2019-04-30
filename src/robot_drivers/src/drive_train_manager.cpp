@@ -3,28 +3,18 @@
 
 DriveTrainManager::DriveTrainManager()
 {
-	current_x = 0;
-	current_y = 0;
-	current_theta = 0;
-
-	current_vx = 0;
-	current_vy = 0;
-	current_vtheta = 0;
+	reset_values();
 
 	should_run = false;
+	is_initialized = false;
 }
 
 DriveTrainManager::~DriveTrainManager()
 {
-	current_x = 0;
-	current_y = 0;
-	current_theta = 0;
-
-	current_vx = 0;
-	current_vy = 0;
-	current_vtheta = 0;
+	reset_values();
 
 	should_run = false;
+	is_initialized = false;
 }
 
 bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0", const std::string right_device_port_name="USB1")
@@ -69,12 +59,14 @@ bool DriveTrainManager::initialize(const std::string left_device_port_name="USB0
 	}
 
 	should_run = true;
+	is_initialized = true;
 	return true;
 }
 
 bool DriveTrainManager::terminate()
 {
 	bool status = true;
+	is_initialized = false;
 
 	if (!left_wheel.terminate())
 	{
@@ -104,6 +96,13 @@ bool DriveTrainManager::reset()
 		status = false;
 	}
 
+	reset_values();
+
+	return status;
+}
+
+bool DriveTrainManager::reset_values()
+{
 	current_x = 0;
 	current_y = 0;
 	current_theta = 0;
@@ -112,7 +111,8 @@ bool DriveTrainManager::reset()
 	current_vy = 0;
 	current_vtheta = 0;
 
-	return status;
+	last_left_position = 0;
+	last_right_position = 0;
 }
 
 bool DriveTrainManager::set_rpm(const double left_rpm, const double right_rpm) const
@@ -271,8 +271,6 @@ bool DriveTrainManager::stop() const
 
 bool DriveTrainManager::update_odometry()
 {
-	static int last_left_position = 0;
-	static int last_right_position = 0;
 	static auto last_update_time = std::chrono::high_resolution_clock::now();
 
 	int current_left_position;

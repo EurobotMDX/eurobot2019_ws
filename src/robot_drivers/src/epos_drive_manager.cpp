@@ -70,11 +70,13 @@ bool EposDriveManager::reset() const
 	unsigned int p_rlErrorCode;
 	if ( VCS_ResetDevice(_g_pKeyHandle, _g_usNodeId, &p_rlErrorCode) == 0)
 	{
+		// std::cout << "could not reset EPOS device" << std::endl;
 		return false;
 	}
 
 	if (!reset_encoders())
 	{
+		// std::cout << "could not reset EPOS encoders" << std::endl;
 		return false;
 	}
 

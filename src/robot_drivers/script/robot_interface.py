@@ -5,13 +5,15 @@ from __future__ import division
 import time
 import rospy
 import urllib2
-from std_msgs.msg import String, Bool
+from std_msgs.msg import String, Bool, Float32
 from sensor_msgs.msg import Range
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Twist
 import copy
 
 from tf.transformations import euler_from_quaternion, quaternion_from_euler
+
+EXPERIMENT_ID = 104
 
 class RobotInterfaceBase(object):
     def __init__(self):
@@ -27,6 +29,8 @@ class RobotInterfaceBase(object):
             "y" : 0.0,
             "yaw" : 0.0
         }
+
+        self.robot_score = 0.0
 
         self.base_width = 0.1714
         self.smooting_val = 10
@@ -48,6 +52,7 @@ class RobotInterfaceBase(object):
         self.serial_data_publisher = rospy.Publisher('serial_data_handler_msg', String, queue_size=10)
         self.motion_data_publisher = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
         self.reset_odometry_publisher = rospy.Publisher('/reset_drive_train', Bool, queue_size=10)
+        self.robot_score_publisher = rospy.Publisher('/robot_score', Float32, queue_size=10)
     
     def terminate(self):
         rospy.loginfo("terminating robot_interface")
@@ -71,13 +76,13 @@ class RobotInterfaceBase(object):
                 rospy.loginfo("deactivating the experiment")
                 self.deactivate_experiment()
     
-    def wait_for_pull_to_start(self, timeout=-1):
+    def wait_for_pull_to_start(self, timeout=-1, state=True):
 
         start_time = time.time()
         while not rospy.is_shutdown():
 
             if self.pull_to_start_state is not None:
-                if self.pull_to_start_state == True:
+                if self.pull_to_start_state == state:
                     break
             
             if timeout > 0:
@@ -87,6 +92,14 @@ class RobotInterfaceBase(object):
 
             rospy.loginfo("Waiting for pull to start")
             rospy.sleep(0.3)
+    
+    def update_robot_score(self, score):
+        self.robot_score += score
+
+        msg = Float32()
+        msg.data = self.robot_score
+
+        self.robot_score_publisher.publish(msg)
 
     def proximity_sensor_front_callback(self, range_msg):
         self.proximity_sensors["front"] = self.smoothing(self.proximity_sensors["front"], range_msg.range, self.smooting_val)
@@ -115,7 +128,7 @@ class RobotInterfaceBase(object):
         return self.publish_string("{s,0,0.4}{s,1,1.4}", self.serial_data_publisher)
 
     def close_gripper(self):
-        return self.publish_string("{s,0,0.8}{s,1,1.0}", self.serial_data_publisher)
+        return self.publish_string("{s,0,0.82}{s,1,0.98}", self.serial_data_publisher)
     
     def push_left(self):
         return self.publish_string("{s,2,2.2}", self.serial_data_publisher)
@@ -123,13 +136,13 @@ class RobotInterfaceBase(object):
     def push_right(self):
         return self.publish_string("{s,2,0.6}", self.serial_data_publisher)
     
-    def activate_experiment(self, address=103):
+    def activate_experiment(self, address=EXPERIMENT_ID):
         try:
             urllib2.urlopen(self.experiment_activate_url.format(address))
         except IOError, urllib2.HTTPError:
             pass
     
-    def deactivate_experiment(self, address=103):
+    def deactivate_experiment(self, address=EXPERIMENT_ID):
         try:
             urllib2.urlopen(self.experiment_deactivate_url.format(address))
         except IOError, urllib2.HTTPError:

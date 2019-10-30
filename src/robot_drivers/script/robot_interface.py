@@ -134,10 +134,10 @@ class RobotInterfaceBase(object):
         return self.publish_string("{s,0,0.82}{s,1,0.98}", self.serial_data_publisher)
     
     def push_left(self):
-        return self.publish_string("{s,2,2.2}", self.serial_data_publisher)
+        return self.publish_string("{s,2,0.0}", self.serial_data_publisher)
     
     def push_right(self):
-        return self.publish_string("{s,2,0.6}", self.serial_data_publisher)
+        return self.publish_string("{s,2,1.3}", self.serial_data_publisher)
     
     def activate_experiment(self, address=EXPERIMENT_ID):
         try:

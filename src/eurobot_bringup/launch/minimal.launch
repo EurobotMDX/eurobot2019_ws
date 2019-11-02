@@ -14,7 +14,7 @@
 	<param name="odom_frame_id" type="string" value="$(arg odom_frame_id)"/>
 
 	<!-- Load the robot's URDF model into the parameter server -->
-    <param name="robot_description" textfile="$(find robot_description)/model/robot_1.urdf"/>
+    <param name="robot_description" textfile="$(find robot_description)/model/robot2.urdf"/>
 
 	<!-- Launch robot differential drivers -->
 	<node pkg="robot_drivers" type="drive_train_ros_handler_node" name="drive_train_controller" output="screen">

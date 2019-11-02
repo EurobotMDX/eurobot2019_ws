@@ -32,12 +32,12 @@ class RobotInterfaceBase(object):
 
         self.robot_score = 0.0
 
-        self.base_width = 0.1714
+        self.base_width = 0.2214 #0.1714
         self.smooting_val = 10
 
         self.pull_to_start_state = None
-        self.experiment_activate_url = "http://192.168.100.{}/activate"
-        self.experiment_deactivate_url = "http://192.168.100.{}/deactivate"
+        # self.experiment_activate_url = "http://192.168.100.{}/activate"
+        # self.experiment_deactivate_url = "http://192.168.100.{}/deactivate"
     
     def initialize(self):
         rospy.Subscriber("odom", Odometry, self.update_robot_position)
@@ -73,11 +73,11 @@ class RobotInterfaceBase(object):
             self.pull_to_start_state = new_state
 
             if new_state == True:
-                rospy.loginfo("activating the experiment")
-                self.activate_experiment()
+                rospy.loginfo("activating the experiment - nothing happened")
+                # self.activate_experiment()
             else:
-                rospy.loginfo("deactivating the experiment")
-                self.deactivate_experiment()
+                rospy.loginfo("deactivating the experiment -nothing happened")
+                # self.deactivate_experiment()
     
     def wait_for_pull_to_start(self, timeout=-1, state=True):
 
@@ -128,28 +128,34 @@ class RobotInterfaceBase(object):
         # rospy.loginfo(self.robot_position)
     
     def open_gripper(self):
-        return self.publish_string("{s,0,0.4}{s,1,1.4}", self.serial_data_publisher)
+        return self.publish_string("{s,0,0.4}{s,1,1.98}", self.serial_data_publisher)
 
     def close_gripper(self):
-        return self.publish_string("{s,0,0.82}{s,1,0.98}", self.serial_data_publisher)
+        return self.publish_string("{s,0,0.82}{s,1,1.98}", self.serial_data_publisher)
+
+    def semi_open_gripper(self):
+        return self.publish_string("{s,0,0.82}{s,1,1.0}", self.serial_data_publisher)
+
+    def semi_close_gripper(self):
+        return self.publish_string("{s,0,0.04}{s,1,1.0}", self.serial_data_publisher)
     
-    def push_left(self):
-        return self.publish_string("{s,2,0.0}", self.serial_data_publisher)
-    
-    def push_right(self):
-        return self.publish_string("{s,2,1.3}", self.serial_data_publisher)
-    
-    def activate_experiment(self, address=EXPERIMENT_ID):
-        try:
-            urllib2.urlopen(self.experiment_activate_url.format(address))
-        except IOError, urllib2.HTTPError:
-            pass
-    
-    def deactivate_experiment(self, address=EXPERIMENT_ID):
-        try:
-            urllib2.urlopen(self.experiment_deactivate_url.format(address))
-        except IOError, urllib2.HTTPError:
-            pass
+    # def push_left(self):
+    #     return self.publish_string("{s,2,0.0}", self.serial_data_publisher)
+    #
+    # def push_right(self):
+    #     return self.publish_string("{s,2,1.3}", self.serial_data_publisher)
+    #
+    # def activate_experiment(self, address=EXPERIMENT_ID):
+    #     try:
+    #         urllib2.urlopen(self.experiment_activate_url.format(address))
+    #     except IOError, urllib2.HTTPError:
+    #         pass
+    #
+    # def deactivate_experiment(self, address=EXPERIMENT_ID):
+    #     try:
+    #         urllib2.urlopen(self.experiment_deactivate_url.format(address))
+    #     except IOError, urllib2.HTTPError:
+    #         pass
     
     def set_motion(self, linear_velocity=0, angular_velocity=0):
         msg = Twist()
@@ -176,17 +182,24 @@ if __name__ == "__main__":
     robot = RobotInterfaceBase()
 
     robot.initialize()
-    robot.wait_for_pull_to_start()
+    # robot.wait_for_pull_to_start()
 
-    rospy.loginfo("Testing Pusher")
-    robot.push_left()
-    robot.push_right(); time.sleep(2)
-    robot.push_left()
+    # rospy.loginfo("Testing Pusher")
+    # robot.push_left()
+    # robot.push_right(); time.sleep(2)
+    # robot.push_left()
 
     rospy.loginfo("Testing Grippers")
     robot.open_gripper()
-    robot.close_gripper(); time.sleep(2)
+    robot.close_gripper()
+    time.sleep(2)
     robot.open_gripper()
+    robot.close_gripper()
+
+    time.sleep(2)
+    robot.semi_open_gripper()
+    robot.semi_close_gripper()
+
 
     rospy.loginfo("Moving Forward")
     robot.set_motion(0.1, 0.0); time.sleep(2)

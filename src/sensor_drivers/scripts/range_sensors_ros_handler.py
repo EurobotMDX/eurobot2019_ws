@@ -7,7 +7,10 @@ from std_msgs.msg import String
 from sensor_msgs.msg import Range, PointCloud
 from geometry_msgs.msg import Point32
 
+
 range_sensors_frame_ids = ["ultrasonic_left_emission_point", "ultrasonic_back_emission_point", "ultrasonic_right_emission_point", "ultrasonic_front_emission_point"]
+
+
 
 def publish_ultrasonic_messages(data_publishers, measured_distances):
     range_msg = Range()
@@ -56,6 +59,8 @@ def main():
         measured_distances = json.loads(data.data)
         publish_ultrasonic_messages([left_range_publisher, back_range_publisher, right_range_publisher, front_range_publisher], measured_distances)
         publish_point_cloud_messages([left_point_cloud_publisher, back_point_cloud_publisher, right_point_cloud_publisher, front_point_cloud_publisher], measured_distances)
+
+
 
     rospy.Subscriber("raw_range_data", String, callback)
     rospy.spin()

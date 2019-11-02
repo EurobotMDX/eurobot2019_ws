@@ -1,0 +1,6 @@
+<launch>
+	<!-- Launch Gripper Manager -->
+	<node name="serial_com_data_handler" pkg="robot_grippers" type="main.py" output="screen">
+	<!-- <node name="serial_com_data_handler" pkg="robot_grippers" type="serial_com_data_handler.py" output="screen"> -->
+	</node>
+</launch>

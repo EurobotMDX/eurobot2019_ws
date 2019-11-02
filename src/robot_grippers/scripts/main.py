@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-
 import rospy
 from std_msgs.msg import String
 
@@ -24,18 +23,18 @@ class RobotGripper(object):
     def open_gripper(self):
         pass
     
-    def extend_gripper(self):
-        pass
-    
-    def retract_gripper(self):
-        pass
-    
-    def push_left(self):
-        pass
-    
-    def push_right(self):
-        pass
-    
+    # def extend_gripper(self):
+    #     pass
+    #
+    # def retract_gripper(self):
+    #     pass
+    #
+    # def push_left(self):
+    #     pass
+    #
+    # def push_right(self):
+    #     pass
+    #
     def reset(self):
         pass
     
@@ -53,6 +52,7 @@ def main():
     gripper_object.initialize()
 
     # TODO: implement test/sample code
+    
 
     gripper_object.terminate()
 

@@ -1,0 +1,35 @@
+<launch>
+	<master auto="start"/>
+
+	<arg name="publish_rate"    default="15"/>
+	<arg name="global_frame_id" default="map"/>
+	<arg name="odom_frame_id"   default="odom"/>
+	<arg name="base_frame_id"   default="base_link"/>
+
+	<!-- to run the static transform publisher -->
+	<!-- rosrun tf static_transform_publisher 0 0 0 0 0 0 1 map odom 10 -->
+
+	<!-- Set Motor Parameters -->
+	<param name="base_frame_id" type="string" value="$(arg base_frame_id)"/>
+	<param name="odom_frame_id" type="string" value="$(arg odom_frame_id)"/>
+
+	<!-- Load the robot's URDF model into the parameter server -->
+    <param name="robot_description" textfile="$(find robot_description)/model/robot_1.urdf"/>
+
+	<!-- Launch robot differential drivers -->
+	<node pkg="robot_drivers" type="drive_train_ros_handler_node" name="drive_train_controller" output="screen">
+		<rosparam file="$(find robot_description)/config/robot_config.yaml" command="load" />
+		<param name="publish_rate"   type="double" value="$(arg publish_rate)"/>
+		<param name="base_frame_id"  type="string" value="$(arg base_frame_id)"/>
+		<param name="odom_frame_id"  type="string" value="$(arg odom_frame_id)"/>
+		<param name="global_frame_id"  type="string" value="$(arg global_frame_id)"/>
+	</node>
+
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" />
+
+	<include file="$(find eurobot_bringup)/launch/sensors.launch" />
+	<include file="$(find eurobot_bringup)/launch/web_server.launch" />
+
+	<!-- <node pkg="tf" type="static_transform_publisher" name="map_transform_broadcaster" args="0 0 0 0 0 0 1 /map /odom 100" /> -->
+	<!-- <include file="$(find robot_vision)/launch/robot_vision.launch" /> -->
+</launch>

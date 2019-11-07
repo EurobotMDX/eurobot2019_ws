@@ -7,7 +7,7 @@
 #include <math.h>
 
 // using meters, radians, etc. meteric only!
-#define _RB_BASE_WIDTH 0.2210 // to contact center of wheels, old value 0.1714 old 0.2280
+#define _RB_BASE_WIDTH 0.2075 // to contact center of wheels, old value 0.1714 old 0.2280
 #define _RB_WHEEL_DIAMETER 0.07
 #define _RB_NUM_OF_ENCODER_COUNTS 16384 //encoders 2400 //16384 // 4096 * 4
 #define _RB_ABS_GEAR_RATIO (4554.0 / 130.0)

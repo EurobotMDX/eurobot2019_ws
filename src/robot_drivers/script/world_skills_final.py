@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 from __future__ import division
 from decimal import *
+import time
 import thread
 import rospy, signal
 from std_msgs.msg import String
@@ -37,7 +38,7 @@ robot.move_angular(180)
 
 
 rospy.loginfo("Testing Linear Velocity")
-robot.move_linear(0.1, should_avoid_obstacles=True, obstacle_backup_distance=0.2, clearing_distance=0.32)
+# robot.move_linear(0.1, should_avoid_obstacles=True, obstacle_backup_distance=0.2, clearing_distance=0.32)
 
 
 rospy.loginfo("ctrl-c to terminate")
